@@ -20,15 +20,15 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
   }
 
   const getContentAlignment = () => {
-    let classes = "flex flex-col px-8 w-full";
+    let classes = "flex flex-col px-8 w-full h-full";
     
     // Vertical alignment
     if (slide.verticalAlignment === "top") {
-      classes += " justify-start mt-20";
+      classes += " justify-start pt-20";
     } else if (slide.verticalAlignment === "center") {
       classes += " justify-center";
     } else if (slide.verticalAlignment === "bottom") {
-      classes += " justify-end mb-20";
+      classes += " justify-end pb-20";
     }
     
     // Horizontal alignment (apply to child elements)
@@ -172,7 +172,7 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
       </div>
       
       {/* Content area */}
-      <div className="flex-1 flex items-center justify-center overflow-hidden">
+      <div className="flex-1 overflow-hidden">
         {renderSlideContent()}
       </div>
       
