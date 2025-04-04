@@ -1,6 +1,5 @@
 
-import { DragHandleDots2Icon } from "@radix-ui/react-icons";
-import { Trash2 } from "lucide-react";
+import { GripVertical, Trash2 } from "lucide-react";
 import { Slide } from "../types/editor";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -41,7 +40,7 @@ export function SlideCard({ slide, isSelected, onSelect, onDelete }: SlideCardPr
       onClick={onSelect}
     >
       <div className="absolute top-1 left-1">
-        <DragHandleDots2Icon className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
