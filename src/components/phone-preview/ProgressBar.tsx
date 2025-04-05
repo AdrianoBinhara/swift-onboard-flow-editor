@@ -35,19 +35,14 @@ export function ProgressBar({
     : progress;
 
   return (
-    <div className="absolute top-0 left-0 right-0 px-4 pt-4 z-10">
-      {/* Show slide counter text if we have currentSlide and totalSlides */}
-      {currentSlide && totalSlides && (
-        <div className="flex justify-end mb-1 text-xs font-medium text-gray-600">
-          {currentSlide} / {totalSlides}
-        </div>
-      )}
+    <div className="px-0 w-full">
       <Progress 
         value={progressValue} 
         className={getProgressBarHeight()}
         style={{ 
           backgroundColor: slide.progressBarColor ? `${slide.progressBarColor}40` : undefined,
-          '--progress-bar-color': slide.progressBarColor 
+          '--progress-bar-color': slide.progressBarColor,
+          borderRadius: 0
         } as React.CSSProperties}
       />
     </div>

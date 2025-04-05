@@ -84,31 +84,34 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Back button and progress indicator in header - only show if not on first slide */}
-        {currentIndex > 0 && (
-          <div className="w-full border-b border-blue-400 px-4 py-2 flex justify-between items-center bg-white">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="flex items-center gap-1 text-sm text-blue-500 p-0 h-auto"
-              onClick={navigateToPrevSlide}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-            <div className="text-sm text-blue-500">
-              {currentIndex + 1} / {allSlides.length}
+        {/* Navigation header with back button and progress indicator */}
+        <div className="w-full bg-white">
+          {/* Only show back button if not on the first slide */}
+          {currentIndex > 0 && (
+            <div className="flex items-center justify-between px-4 py-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="flex items-center gap-1 text-sm text-blue-500 p-0 h-auto"
+                onClick={navigateToPrevSlide}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+              <div className="text-sm text-blue-500">
+                {currentIndex + 1} / {allSlides.length}
+              </div>
             </div>
-          </div>
-        )}
-        
-        {/* Progress bar at the top - show on all slides */}
-        <ProgressBar 
-          slide={mergedSlide} 
-          progress={progressPercentage} 
-          currentSlide={currentIndex + 1}
-          totalSlides={allSlides.length}
-        />
+          )}
+          
+          {/* Progress bar below the back button */}
+          <ProgressBar 
+            slide={mergedSlide} 
+            progress={progressPercentage} 
+            currentSlide={currentIndex + 1}
+            totalSlides={allSlides.length}
+          />
+        </div>
         
         <div 
           className="flex flex-1 flex-col px-6 relative overflow-auto"

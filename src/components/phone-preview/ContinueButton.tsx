@@ -39,18 +39,18 @@ export function ContinueButton({ slide }: ContinueButtonProps) {
     <div className={getButtonContainerClass()}>
       <Button 
         className={cn(
-          slide.roundedCorners ? "rounded-lg" : "rounded-md",
+          "rounded-md",
           getButtonSize(),
           slide.buttonFullWidth && "w-full",
-          "bg-blue-500 hover:bg-blue-600" // Make button blue to match image
+          "bg-blue-500 hover:bg-blue-600"
         )}
         style={{ 
           backgroundColor: slide.buttonColor || "#4299e1",
-          color: slide.buttonTextColor || undefined
+          color: slide.buttonTextColor || "#ffffff"
         }}
       >
         Continue
-        {getButtonIcon()}
+        <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </div>
   );
