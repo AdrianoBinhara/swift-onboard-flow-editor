@@ -4,6 +4,7 @@ import { Progress } from "../ui/progress";
 import { Slide } from "@/types/editor";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
+import { getBackgroundStyle } from "./utils";
 
 interface ProgressBarProps {
   slide: Slide;
@@ -40,8 +41,11 @@ export function ProgressBar({
     ? slide.progressPercentage 
     : progress;
 
+  // Get background style from the slide
+  const backgroundStyle = getBackgroundStyle(slide);
+
   return (
-    <div className="w-full bg-white">
+    <div className="w-full" style={backgroundStyle}>
       <div className="flex items-center pt-2 pb-1 px-4">
         {/* Back button displayed at the left side, on the same line as progress bar */}
         {showBackButton && (
