@@ -17,7 +17,12 @@ import {
   MoveHorizontal,
   CornerDownRight,
   X,
-  CalendarIcon
+  CalendarIcon,
+  CheckCircle2,
+  CircleOff,
+  Layers,
+  Sliders,
+  ChevronsUpDown
 } from "lucide-react";
 import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
@@ -38,6 +43,12 @@ import {
   PopoverTrigger,
 } from "./ui/popover";
 import { useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
 
 interface SlideEditorProps {
   slide: Slide | null;
@@ -97,8 +108,8 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
   return (
     <div className="p-4 space-y-6 overflow-y-auto max-h-full">
       <div className="flex items-center mb-4">
-        <div className="w-6 h-6 bg-accent rounded-md flex items-center justify-center mr-2">
-          <span className="text-xs font-bold">
+        <div className="w-6 h-6 bg-purple-100 rounded-md flex items-center justify-center mr-2">
+          <span className="text-xs font-bold text-purple-700">
             {slide.type === 'text' ? 'T' : 
              slide.type === 'image' ? 'I' :
              slide.type === 'video' ? 'V' :
@@ -113,7 +124,7 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
       </div>
 
       <Tabs defaultValue="content">
-        <TabsList className="grid grid-cols-3 mb-4">
+        <TabsList className="grid grid-cols-3 mb-4 bg-purple-50">
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="style">Style</TabsTrigger>
           <TabsTrigger value="animation">Animation</TabsTrigger>
@@ -442,438 +453,623 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
         </TabsContent>
 
         <TabsContent value="style" className="space-y-4">
-          <div>
-            <Label className="mb-2 block flex items-center">
-              <PaintBucket className="w-4 h-4 mr-2" /> Background
-            </Label>
-            
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Background Color</Label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {presetBackgroundColors.map((color) => (
-                  <div
-                    key={color}
-                    className={cn(
-                      "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
-                      slide.backgroundColor === color && "ring-2 ring-primary ring-offset-2"
-                    )}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleFieldChange('backgroundColor', color)}
-                  />
-                ))}
-              </div>
-              <Input
-                className="mt-2"
-                placeholder="#ffffff or rgb(255,255,255)"
-                value={slide.backgroundColor || ''}
-                onChange={(e) => handleFieldChange('backgroundColor', e.target.value)}
-              />
-            </div>
-
-            <div className="mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <Label className="text-sm text-muted-foreground">Background Gradients</Label>
-                {slide.backgroundGradient && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={clearGradient} 
-                    className="h-6 px-2 text-xs"
-                  >
-                    <X className="h-3 w-3 mr-1" /> Clear gradient
-                  </Button>
-                )}
-              </div>
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                {presetGradients.map((gradient) => (
-                  <div
-                    key={gradient}
-                    className={cn(
-                      "h-10 rounded cursor-pointer border border-gray-200",
-                      slide.backgroundGradient === gradient && "ring-2 ring-primary"
-                    )}
-                    style={{ background: gradient }}
-                    onClick={() => handleFieldChange('backgroundGradient', gradient)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Background Image URL</Label>
-              <div className="relative">
-                <Input
-                  className="mt-2 pr-8"
-                  placeholder="https://example.com/image.jpg"
-                  value={slide.backgroundImage || ''}
-                  onChange={(e) => handleFieldChange('backgroundImage', e.target.value)}
-                />
-                {slide.backgroundImage && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="absolute right-1 top-3 h-6 w-6 p-0" 
-                    onClick={() => handleFieldChange('backgroundImage', '')}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div>
-            <Label className="mb-2 block flex items-center">
-              <Type className="w-4 h-4 mr-2" /> Text Styling
-            </Label>
-            
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Title Font Size</Label>
-              <RadioGroup 
-                className="grid grid-cols-3 gap-2 mt-2" 
-                value={slide.titleFontSize || 'medium'}
-                onValueChange={(value) => handleFieldChange('titleFontSize', value)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="small" id="title-small" />
-                  <Label htmlFor="title-small">Small</Label>
+          <Accordion type="multiple" defaultValue={["background", "text", "button", "progress"]}>
+            {/* Background Section */}
+            <AccordionItem value="background" className="border rounded-md px-2 py-1 mb-3 bg-gray-50/50">
+              <AccordionTrigger className="py-2 px-1 hover:no-underline">
+                <div className="flex items-center">
+                  <PaintBucket className="w-4 h-4 mr-2 text-purple-500" />
+                  <span className="font-medium">Background</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="medium" id="title-medium" />
-                  <Label htmlFor="title-medium">Medium</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="large" id="title-large" />
-                  <Label htmlFor="title-large">Large</Label>
-                </div>
-              </RadioGroup>
-            </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-3 px-1 pb-1">
+                <div className="mb-4 space-y-3">
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-2 block">Background Color</Label>
+                    <div className="grid grid-cols-8 gap-2 mt-1">
+                      {presetBackgroundColors.map((color) => (
+                        <div
+                          key={color}
+                          className={cn(
+                            "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
+                            slide.backgroundColor === color && "ring-2 ring-purple-500 ring-offset-2"
+                          )}
+                          style={{ backgroundColor: color }}
+                          onClick={() => handleFieldChange('backgroundColor', color)}
+                          title={color}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
+                        className="flex-1"
+                        placeholder="#ffffff or rgb(255,255,255)"
+                        value={slide.backgroundColor || ''}
+                        onChange={(e) => handleFieldChange('backgroundColor', e.target.value)}
+                      />
+                      {slide.backgroundColor && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-10 w-10"
+                          onClick={() => handleFieldChange('backgroundColor', '')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
 
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Description Font Size</Label>
-              <RadioGroup 
-                className="grid grid-cols-3 gap-2 mt-2" 
-                value={slide.descriptionFontSize || 'medium'}
-                onValueChange={(value) => handleFieldChange('descriptionFontSize', value)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="small" id="desc-small" />
-                  <Label htmlFor="desc-small">Small</Label>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <Label className="text-sm text-muted-foreground">Background Gradients</Label>
+                      {slide.backgroundGradient && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={clearGradient} 
+                          className="h-6 px-2 text-xs"
+                        >
+                          <X className="h-3 w-3 mr-1" />
+                          <span>Clear</span>
+                        </Button>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      {presetGradients.map((gradient) => (
+                        <div
+                          key={gradient}
+                          className={cn(
+                            "h-10 rounded cursor-pointer border border-gray-200",
+                            slide.backgroundGradient === gradient && "ring-2 ring-purple-500"
+                          )}
+                          style={{ background: gradient }}
+                          onClick={() => handleFieldChange('backgroundGradient', gradient)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-2 block">Background Image URL</Label>
+                    <div className="relative">
+                      <Input
+                        className="pr-8"
+                        placeholder="https://example.com/image.jpg"
+                        value={slide.backgroundImage || ''}
+                        onChange={(e) => handleFieldChange('backgroundImage', e.target.value)}
+                      />
+                      {slide.backgroundImage && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="absolute right-1 top-1 h-8 w-8 p-0" 
+                          onClick={() => handleFieldChange('backgroundImage', '')}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="medium" id="desc-medium" />
-                  <Label htmlFor="desc-medium">Medium</Label>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Text Styling Section */}
+            <AccordionItem value="text" className="border rounded-md px-2 py-1 mb-3 bg-gray-50/50">
+              <AccordionTrigger className="py-2 px-1 hover:no-underline">
+                <div className="flex items-center">
+                  <Type className="w-4 h-4 mr-2 text-purple-500" />
+                  <span className="font-medium">Text Styling</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="large" id="desc-large" />
-                  <Label htmlFor="desc-large">Large</Label>
+              </AccordionTrigger>
+              <AccordionContent className="pt-3 px-1 pb-1">
+                <div className="space-y-4">
+                  {/* Title Font Size */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Title Font Size</Label>
+                    <div className="grid grid-cols-3 gap-2 mt-1">
+                      {(["small", "medium", "large"] as const).map((size) => (
+                        <Button
+                          key={size}
+                          variant={slide.titleFontSize === size ? "default" : "outline"}
+                          onClick={() => handleFieldChange('titleFontSize', size)}
+                          className={cn(
+                            "capitalize",
+                            slide.titleFontSize === size && "bg-purple-500 hover:bg-purple-600"
+                          )}
+                        >
+                          {size}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Description Font Size */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Description Font Size</Label>
+                    <div className="grid grid-cols-3 gap-2 mt-1">
+                      {(["small", "medium", "large"] as const).map((size) => (
+                        <Button
+                          key={size}
+                          variant={slide.descriptionFontSize === size ? "default" : "outline"}
+                          onClick={() => handleFieldChange('descriptionFontSize', size)}
+                          className={cn(
+                            "capitalize",
+                            slide.descriptionFontSize === size && "bg-purple-500 hover:bg-purple-600"
+                          )}
+                        >
+                          {size}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Title Color */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Title Color</Label>
+                    <div className="grid grid-cols-8 gap-2 mt-1">
+                      {presetTextColors.map((color) => (
+                        <div
+                          key={color}
+                          className={cn(
+                            "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
+                            slide.titleColor === color && "ring-2 ring-purple-500 ring-offset-2"
+                          )}
+                          style={{ backgroundColor: color }}
+                          onClick={() => handleFieldChange('titleColor', color)}
+                          title={color}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
+                        className="flex-1"
+                        placeholder="#000000 or rgb(0,0,0)"
+                        value={slide.titleColor || ''}
+                        onChange={(e) => handleFieldChange('titleColor', e.target.value)}
+                      />
+                      {slide.titleColor && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-10 w-10"
+                          onClick={() => handleFieldChange('titleColor', '')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Description Color */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Description Color</Label>
+                    <div className="grid grid-cols-8 gap-2 mt-1">
+                      {presetTextColors.map((color) => (
+                        <div
+                          key={color}
+                          className={cn(
+                            "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
+                            slide.descriptionColor === color && "ring-2 ring-purple-500 ring-offset-2"
+                          )}
+                          style={{ backgroundColor: color }}
+                          onClick={() => handleFieldChange('descriptionColor', color)}
+                          title={color}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
+                        className="flex-1"
+                        placeholder="#000000 or rgb(0,0,0)"
+                        value={slide.descriptionColor || ''}
+                        onChange={(e) => handleFieldChange('descriptionColor', e.target.value)}
+                      />
+                      {slide.descriptionColor && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-10 w-10"
+                          onClick={() => handleFieldChange('descriptionColor', '')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </RadioGroup>
-            </div>
+              </AccordionContent>
+            </AccordionItem>
 
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Title Color</Label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {presetTextColors.map((color) => (
-                  <div
-                    key={color}
-                    className={cn(
-                      "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
-                      slide.titleColor === color && "ring-2 ring-primary ring-offset-2"
-                    )}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleFieldChange('titleColor', color)}
-                  />
-                ))}
-              </div>
-              <Input
-                className="mt-2"
-                placeholder="#000000 or rgb(0,0,0)"
-                value={slide.titleColor || ''}
-                onChange={(e) => handleFieldChange('titleColor', e.target.value)}
-              />
-            </div>
+            {/* Button Styling Section */}
+            <AccordionItem value="button" className="border rounded-md px-2 py-1 mb-3 bg-gray-50/50">
+              <AccordionTrigger className="py-2 px-1 hover:no-underline">
+                <div className="flex items-center">
+                  <Palette className="w-4 h-4 mr-2 text-purple-500" />
+                  <span className="font-medium">Button Styling</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-3 px-1 pb-1">
+                <div className="space-y-4">
+                  {/* Button Color */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Button Color</Label>
+                    <div className="grid grid-cols-8 gap-2 mt-1">
+                      {presetButtonColors.map((color) => (
+                        <div
+                          key={color}
+                          className={cn(
+                            "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
+                            slide.buttonColor === color && "ring-2 ring-purple-500 ring-offset-2"
+                          )}
+                          style={{ backgroundColor: color }}
+                          onClick={() => handleFieldChange('buttonColor', color)}
+                          title={color}
+                        />
+                      ))}
+                      <div
+                        className={cn(
+                          "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
+                          !slide.buttonColor && "ring-2 ring-purple-500 ring-offset-2"
+                        )}
+                        onClick={() => handleFieldChange('buttonColor', undefined)}
+                      >
+                        <X className="h-3 w-3" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
+                        className="flex-1"
+                        placeholder="#0070f3 or rgb(0,112,243)"
+                        value={slide.buttonColor || ''}
+                        onChange={(e) => handleFieldChange('buttonColor', e.target.value)}
+                      />
+                      {slide.buttonColor && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-10 w-10"
+                          onClick={() => handleFieldChange('buttonColor', undefined)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
 
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Description Color</Label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {presetTextColors.map((color) => (
-                  <div
-                    key={color}
-                    className={cn(
-                      "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
-                      slide.descriptionColor === color && "ring-2 ring-primary ring-offset-2"
-                    )}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleFieldChange('descriptionColor', color)}
-                  />
-                ))}
-              </div>
-              <Input
-                className="mt-2"
-                placeholder="#000000 or rgb(0,0,0)"
-                value={slide.descriptionColor || ''}
-                onChange={(e) => handleFieldChange('descriptionColor', e.target.value)}
-              />
-            </div>
-          </div>
+                  {/* Button Text Color */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Button Text Color</Label>
+                    <div className="grid grid-cols-4 gap-2 mt-1">
+                      <div
+                        className={cn(
+                          "flex items-center justify-center h-10 rounded cursor-pointer border border-gray-200 bg-white text-black font-medium",
+                          slide.buttonTextColor === '#000000' && "ring-2 ring-purple-500"
+                        )}
+                        onClick={() => handleFieldChange('buttonTextColor', '#000000')}
+                      >
+                        Black
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center justify-center h-10 rounded cursor-pointer border border-gray-200 bg-black text-white font-medium",
+                          slide.buttonTextColor === '#ffffff' && "ring-2 ring-purple-500"
+                        )}
+                        onClick={() => handleFieldChange('buttonTextColor', '#ffffff')}
+                      >
+                        White
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center justify-center h-10 rounded cursor-pointer border border-gray-200 bg-gray-200 text-gray-800 font-medium",
+                          slide.buttonTextColor === '#333333' && "ring-2 ring-purple-500"
+                        )}
+                        onClick={() => handleFieldChange('buttonTextColor', '#333333')}
+                      >
+                        Gray
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center justify-center h-10 rounded cursor-pointer border border-gray-200 font-medium",
+                          !slide.buttonTextColor && "ring-2 ring-purple-500"
+                        )}
+                        onClick={() => handleFieldChange('buttonTextColor', undefined)}
+                      >
+                        Default
+                      </div>
+                    </div>
+                    <Input
+                      className="mt-2"
+                      placeholder="#ffffff or rgb(255,255,255)"
+                      value={slide.buttonTextColor || ''}
+                      onChange={(e) => handleFieldChange('buttonTextColor', e.target.value)}
+                    />
+                  </div>
 
-          <Separator />
+                  {/* Button Layout Options */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Button Position */}
+                    <div>
+                      <Label className="text-sm text-muted-foreground mb-1 block">Button Position</Label>
+                      <div className="grid grid-cols-1 gap-2 mt-1">
+                        <Button
+                          variant={slide.buttonPosition === 'bottom' ? "default" : "outline"}
+                          onClick={() => handleFieldChange('buttonPosition', 'bottom')}
+                          className={cn(
+                            slide.buttonPosition === 'bottom' && "bg-purple-500 hover:bg-purple-600"
+                          )}
+                        >
+                          Bottom
+                        </Button>
+                        <Button
+                          variant={slide.buttonPosition === 'below-content' ? "default" : "outline"}
+                          onClick={() => handleFieldChange('buttonPosition', 'below-content')}
+                          className={cn(
+                            slide.buttonPosition === 'below-content' && "bg-purple-500 hover:bg-purple-600"
+                          )}
+                        >
+                          Below Content
+                        </Button>
+                      </div>
+                    </div>
 
-          <div>
-            <Label className="mb-2 block flex items-center">
-              <Palette className="w-4 h-4 mr-2" /> Button Styling
-            </Label>
-            
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Button Color</Label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {presetButtonColors.map((color) => (
-                  <div
-                    key={color}
-                    className={cn(
-                      "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
-                      slide.buttonColor === color && "ring-2 ring-primary ring-offset-2"
-                    )}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleFieldChange('buttonColor', color)}
-                  />
-                ))}
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
-                    !slide.buttonColor && "ring-2 ring-primary ring-offset-2"
+                    {/* Button Size */}
+                    <div>
+                      <Label className="text-sm text-muted-foreground mb-1 block">Button Size</Label>
+                      <div className="grid grid-cols-1 gap-2 mt-1">
+                        {(['small', 'medium', 'large'] as const).map((size) => (
+                          <Button
+                            key={size}
+                            variant={slide.buttonSize === size ? "default" : "outline"}
+                            onClick={() => handleFieldChange('buttonSize', size)}
+                            className={cn(
+                              "capitalize",
+                              slide.buttonSize === size && "bg-purple-500 hover:bg-purple-600"
+                            )}
+                          >
+                            {size}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Button Icon */}
+                  <div>
+                    <Label className="text-sm text-muted-foreground mb-1 block">Button Icon</Label>
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      <Button
+                        variant={slide.buttonIcon === 'arrow-right' ? "default" : "outline"}
+                        onClick={() => handleFieldChange('buttonIcon', 'arrow-right')}
+                        className={cn(
+                          "flex items-center justify-center gap-2",
+                          slide.buttonIcon === 'arrow-right' && "bg-purple-500 hover:bg-purple-600"
+                        )}
+                      >
+                        <span>Arrow</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={slide.buttonIcon === 'chevron-right' ? "default" : "outline"}
+                        onClick={() => handleFieldChange('buttonIcon', 'chevron-right')}
+                        className={cn(
+                          "flex items-center justify-center gap-2",
+                          slide.buttonIcon === 'chevron-right' && "bg-purple-500 hover:bg-purple-600"
+                        )}
+                      >
+                        <span>Chevron</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={slide.buttonIcon === 'chevron-down' ? "default" : "outline"}
+                        onClick={() => handleFieldChange('buttonIcon', 'chevron-down')}
+                        className={cn(
+                          "flex items-center justify-center gap-2",
+                          slide.buttonIcon === 'chevron-down' && "bg-purple-500 hover:bg-purple-600"
+                        )}
+                      >
+                        <span>Down</span>
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={slide.buttonIcon === 'none' ? "default" : "outline"}
+                        onClick={() => handleFieldChange('buttonIcon', 'none')}
+                        className={cn(
+                          slide.buttonIcon === 'none' && "bg-purple-500 hover:bg-purple-600"
+                        )}
+                      >
+                        No Icon
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Button Options */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between bg-gray-100 p-3 rounded-md">
+                      <Label className="flex items-center space-x-2 cursor-pointer" htmlFor="full-width">
+                        <span>Button Full Width</span>
+                      </Label>
+                      <Switch
+                        id="full-width"
+                        checked={slide.buttonFullWidth || false}
+                        onCheckedChange={(checked) => handleFieldChange('buttonFullWidth', checked)}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between bg-gray-100 p-3 rounded-md">
+                      <Label className="flex items-center space-x-2 cursor-pointer" htmlFor="rounded-corners">
+                        <CornerDownRight className="w-4 h-4 mr-2" />
+                        <span>Rounded Corners</span>
+                      </Label>
+                      <Switch
+                        id="rounded-corners"
+                        checked={slide.roundedCorners || false}
+                        onCheckedChange={(checked) => handleFieldChange('roundedCorners', checked)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Progress Bar Section */}
+            <AccordionItem value="progress" className="border rounded-md px-2 py-1 mb-3 bg-gray-50/50">
+              <AccordionTrigger className="py-2 px-1 hover:no-underline">
+                <div className="flex items-center">
+                  <MoveHorizontal className="w-4 h-4 mr-2 text-purple-500" />
+                  <span className="font-medium">Progress Bar</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-3 px-1 pb-1">
+                <div className="space-y-4">
+                  {/* Progress Bar Display Toggle */}
+                  <div className="flex items-center justify-between bg-gray-100 p-3 rounded-md">
+                    <Label className="flex items-center cursor-pointer" htmlFor="show-progress">
+                      <span>Show Progress Bar</span>
+                    </Label>
+                    <Switch
+                      id="show-progress"
+                      checked={slide.showProgressBar !== false}
+                      onCheckedChange={(checked) => handleFieldChange('showProgressBar', checked)}
+                    />
+                  </div>
+
+                  {slide.showProgressBar !== false && (
+                    <>
+                      {/* Progress Bar Color */}
+                      <div>
+                        <Label className="text-sm text-muted-foreground mb-1 block">Progress Bar Color</Label>
+                        <div className="grid grid-cols-8 gap-2 mt-1">
+                          {presetButtonColors.map((color) => (
+                            <div
+                              key={color}
+                              className={cn(
+                                "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
+                                slide.progressBarColor === color && "ring-2 ring-purple-500 ring-offset-2"
+                              )}
+                              style={{ backgroundColor: color }}
+                              onClick={() => handleFieldChange('progressBarColor', color)}
+                              title={color}
+                            />
+                          ))}
+                          <div
+                            className={cn(
+                              "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
+                              !slide.progressBarColor && "ring-2 ring-purple-500 ring-offset-2"
+                            )}
+                            onClick={() => handleFieldChange('progressBarColor', undefined)}
+                          >
+                            <X className="h-3 w-3" />
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Input
+                            className="flex-1"
+                            placeholder="#0070f3 or rgb(0,112,243)"
+                            value={slide.progressBarColor || ''}
+                            onChange={(e) => handleFieldChange('progressBarColor', e.target.value)}
+                          />
+                          {slide.progressBarColor && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleFieldChange('progressBarColor', undefined)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Progress Bar Height */}
+                      <div>
+                        <Label className="text-sm text-muted-foreground mb-1 block">Progress Bar Height</Label>
+                        <div className="grid grid-cols-3 gap-2 mt-1">
+                          {(['thin', 'medium', 'thick'] as const).map((height) => (
+                            <Button
+                              key={height}
+                              variant={slide.progressBarHeight === height ? "default" : "outline"}
+                              onClick={() => handleFieldChange('progressBarHeight', height)}
+                              className={cn(
+                                "capitalize",
+                                slide.progressBarHeight === height && "bg-purple-500 hover:bg-purple-600"
+                              )}
+                            >
+                              {height}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Manual Progress Percentage */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <Label className="text-sm text-muted-foreground">Manual Progress Percentage</Label>
+                          {slide.progressPercentage !== undefined && (
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => handleFieldChange('progressPercentage', undefined)} 
+                              className="h-6 px-2 text-xs"
+                            >
+                              <CircleOff className="h-3 w-3 mr-1" />
+                              <span>Auto</span>
+                            </Button>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            className="flex-1"
+                            type="number"
+                            min={0}
+                            max={100}
+                            placeholder="Enter a value (0-100)"
+                            value={slide.progressPercentage?.toString() || ''}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value);
+                              if (!isNaN(value)) {
+                                handleFieldChange('progressPercentage', value);
+                              }
+                            }}
+                          />
+                          <Button 
+                            variant="outline" 
+                            className="whitespace-nowrap"
+                            onClick={() => {
+                              const value = slide.progressPercentage === undefined ? 50 : undefined;
+                              handleFieldChange('progressPercentage', value);
+                            }}
+                          >
+                            {slide.progressPercentage === undefined ? (
+                              <>
+                                <CheckCircle2 className="h-4 w-4 mr-1" />
+                                <span>Manual</span>
+                              </>
+                            ) : (
+                              <>
+                                <CircleOff className="h-4 w-4 mr-1" />
+                                <span>Auto</span>
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                        {slide.progressPercentage !== undefined && (
+                          <div className="mt-2 h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-purple-500"
+                              style={{ width: `${slide.progressPercentage}%` }}
+                            ></div>
+                          </div>
+                        )}
+                      </div>
+                    </>
                   )}
-                  onClick={() => handleFieldChange('buttonColor', undefined)}
-                >
-                  <X className="h-3 w-3" />
                 </div>
-              </div>
-              <Input
-                className="mt-2"
-                placeholder="#0070f3 or rgb(0,112,243)"
-                value={slide.buttonColor || ''}
-                onChange={(e) => handleFieldChange('buttonColor', e.target.value)}
-              />
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Button Text Color</Label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 bg-white",
-                    slide.buttonTextColor === '#ffffff' && "ring-2 ring-primary ring-offset-2"
-                  )}
-                  onClick={() => handleFieldChange('buttonTextColor', '#ffffff')}
-                />
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 bg-black",
-                    slide.buttonTextColor === '#000000' && "ring-2 ring-primary ring-offset-2"
-                  )}
-                  onClick={() => handleFieldChange('buttonTextColor', '#000000')}
-                />
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
-                    !slide.buttonTextColor && "ring-2 ring-primary ring-offset-2"
-                  )}
-                  onClick={() => handleFieldChange('buttonTextColor', undefined)}
-                >
-                  <X className="h-3 w-3" />
-                </div>
-              </div>
-              <Input
-                className="mt-2"
-                placeholder="#ffffff or rgb(255,255,255)"
-                value={slide.buttonTextColor || ''}
-                onChange={(e) => handleFieldChange('buttonTextColor', e.target.value)}
-              />
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Button Position</Label>
-              <RadioGroup 
-                className="grid grid-cols-2 gap-2 mt-2" 
-                value={slide.buttonPosition || 'bottom'}
-                onValueChange={(value) => handleFieldChange('buttonPosition', value)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="bottom" id="button-bottom" />
-                  <Label htmlFor="button-bottom">Bottom</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="below-content" id="button-below" />
-                  <Label htmlFor="button-below">Below Content</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Button Icon</Label>
-              <RadioGroup 
-                className="grid grid-cols-4 gap-2 mt-2" 
-                value={slide.buttonIcon || 'chevron-right'}
-                onValueChange={(value) => handleFieldChange('buttonIcon', value)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="arrow-right" id="icon-arrow" />
-                  <Label htmlFor="icon-arrow">Arrow</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="chevron-right" id="icon-chevron" />
-                  <Label htmlFor="icon-chevron">Chevron</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="chevron-down" id="icon-down" />
-                  <Label htmlFor="icon-down">Down</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="none" id="icon-none" />
-                  <Label htmlFor="icon-none">None</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Button Size</Label>
-              <RadioGroup 
-                className="grid grid-cols-3 gap-2 mt-2" 
-                value={slide.buttonSize || 'medium'}
-                onValueChange={(value) => handleFieldChange('buttonSize', value)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="small" id="button-small" />
-                  <Label htmlFor="button-small">Small</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="medium" id="button-medium" />
-                  <Label htmlFor="button-medium">Medium</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="large" id="button-large" />
-                  <Label htmlFor="button-large">Large</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="flex items-center justify-between mb-4">
-              <Label className="flex items-center space-x-2" htmlFor="full-width">
-                <span>Button Full Width</span>
-              </Label>
-              <Switch
-                id="full-width"
-                checked={slide.buttonFullWidth || false}
-                onCheckedChange={(checked) => handleFieldChange('buttonFullWidth', checked)}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <Label className="flex items-center space-x-2" htmlFor="rounded-corners">
-                <CornerDownRight className="w-4 h-4" />
-                <span>Rounded Corners</span>
-              </Label>
-              <Switch
-                id="rounded-corners"
-                checked={slide.roundedCorners || false}
-                onCheckedChange={(checked) => handleFieldChange('roundedCorners', checked)}
-              />
-            </div>
-          </div>
-
-          <Separator />
-
-          <div>
-            <Label className="mb-2 block flex items-center">
-              <MoveHorizontal className="w-4 h-4 mr-2" /> Progress Bar
-            </Label>
-            
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Progress Bar Color</Label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {presetButtonColors.map((color) => (
-                  <div
-                    key={color}
-                    className={cn(
-                      "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
-                      slide.progressBarColor === color && "ring-2 ring-primary ring-offset-2"
-                    )}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleFieldChange('progressBarColor', color)}
-                  />
-                ))}
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
-                    !slide.progressBarColor && "ring-2 ring-primary ring-offset-2"
-                  )}
-                  onClick={() => handleFieldChange('progressBarColor', undefined)}
-                >
-                  <X className="h-3 w-3" />
-                </div>
-              </div>
-              <Input
-                className="mt-2"
-                placeholder="#0070f3 or rgb(0,112,243)"
-                value={slide.progressBarColor || ''}
-                onChange={(e) => handleFieldChange('progressBarColor', e.target.value)}
-              />
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Progress Bar Height</Label>
-              <RadioGroup 
-                className="grid grid-cols-3 gap-2 mt-2" 
-                value={slide.progressBarHeight || 'medium'}
-                onValueChange={(value) => handleFieldChange('progressBarHeight', value)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="thin" id="progress-thin" />
-                  <Label htmlFor="progress-thin">Thin</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="medium" id="progress-medium" />
-                  <Label htmlFor="progress-medium">Medium</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="thick" id="progress-thick" />
-                  <Label htmlFor="progress-thick">Thick</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Progress Percentage</Label>
-              <Input
-                className="mt-2"
-                type="number"
-                min={0}
-                max={100}
-                placeholder="60"
-                value={slide.progressPercentage?.toString() || ''}
-                onChange={(e) => {
-                  const value = parseInt(e.target.value);
-                  if (!isNaN(value)) {
-                    handleFieldChange('progressPercentage', value);
-                  }
-                }}
-              />
-            </div>
-
-            <div className="flex items-center justify-between mb-4">
-              <Label className="flex items-center space-x-2" htmlFor="show-progress">
-                <span>Show Progress Bar</span>
-              </Label>
-              <Switch
-                id="show-progress"
-                checked={slide.showProgressBar !== false}
-                onCheckedChange={(checked) => handleFieldChange('showProgressBar', checked)}
-              />
-            </div>
-          </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </TabsContent>
 
         <TabsContent value="animation" className="space-y-4">
@@ -883,9 +1079,12 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
               {(['none', 'fade', 'slide-up', 'slide-left', 'zoom'] as const).map((animType) => (
                 <Button
                   key={animType}
-                  variant={slide.animation === animType ? 'default' : 'outline'}
+                  variant={slide.animation === animType ? "default" : "outline"}
                   onClick={() => handleFieldChange('animation', animType)}
-                  className="capitalize"
+                  className={cn(
+                    "capitalize",
+                    slide.animation === animType && "bg-purple-500 hover:bg-purple-600"
+                  )}
                 >
                   {animType.replace('-', ' ')}
                 </Button>
