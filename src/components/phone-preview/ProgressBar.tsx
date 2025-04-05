@@ -35,16 +35,12 @@ export function ProgressBar({
     : progress;
 
   return (
-    <div className="w-full">
-      <Progress 
-        value={progressValue} 
-        className={getProgressBarHeight()}
-        style={{ 
-          backgroundColor: 'transparent', // Make background transparent
-          '--progress-bar-color': slide.progressBarColor || '#ea384c', // Default to red color from image
-          borderRadius: 0,
-        } as React.CSSProperties}
-      />
-    </div>
+    <Progress 
+      value={progressValue} 
+      className={getProgressBarHeight()}
+      style={{ 
+        '--progress-bar-color': slide.progressBarColor || '#4299e1', // Default to blue color from screenshot
+      } as React.CSSProperties}
+    />
   );
 }

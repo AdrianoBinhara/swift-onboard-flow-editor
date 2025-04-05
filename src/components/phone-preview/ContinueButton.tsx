@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "../ui/button";
-import { ChevronRight, ChevronDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Slide } from "@/types/editor";
 
@@ -10,16 +10,6 @@ interface ContinueButtonProps {
 }
 
 export function ContinueButton({ slide }: ContinueButtonProps) {
-  const getButtonIcon = () => {
-    if (slide.buttonIcon === 'none') return null;
-    
-    switch (slide.buttonIcon) {
-      case 'arrow-right': return <ArrowRight className="ml-2 h-4 w-4" />;
-      case 'chevron-down': return <ChevronDown className="ml-2 h-4 w-4" />;
-      default: return <ChevronRight className="ml-2 h-4 w-4" />;
-    }
-  };
-
   const getButtonSize = () => {
     switch (slide.buttonSize) {
       case 'small': return 'h-8 px-3 text-xs';
@@ -42,10 +32,10 @@ export function ContinueButton({ slide }: ContinueButtonProps) {
           "rounded-md",
           getButtonSize(),
           slide.buttonFullWidth && "w-full",
-          "bg-blue-500 hover:bg-blue-600"
+          "bg-blue-500 hover:bg-blue-600" // Blue color to match the screenshot
         )}
         style={{ 
-          backgroundColor: slide.buttonColor || "#4299e1",
+          backgroundColor: slide.buttonColor || "#4299e1", // Blue color from the screenshot
           color: slide.buttonTextColor || "#ffffff"
         }}
       >

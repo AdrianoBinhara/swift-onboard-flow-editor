@@ -84,21 +84,19 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Progress bar at the very top - matches image */}
+        {/* Thin blue progress bar at the very top - no container */}
         <ProgressBar 
           slide={{
             ...mergedSlide,
             progressBarHeight: 'thin',
-            progressBarColor: mergedSlide.progressBarColor || '#ea384c', // Default to red color from image
+            progressBarColor: '#4299e1', // Blue color as shown in second screenshot
           }} 
           progress={progressPercentage} 
-          currentSlide={currentIndex + 1}
-          totalSlides={allSlides.length}
         />
         
         {/* Back button navigation - only show if not on the first slide */}
         {currentIndex > 0 && (
-          <div className="w-full bg-white px-4 py-2">
+          <div className="w-full bg-white px-4 py-3 border-b border-gray-100">
             <Button
               size="sm"
               variant="ghost"
