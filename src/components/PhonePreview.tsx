@@ -11,9 +11,10 @@ import { ReplayButton } from "./phone-preview/ReplayButton";
 
 interface PhonePreviewProps {
   slide: Slide | null;
+  allSlides?: Slide[]; // Add allSlides prop
 }
 
-export function PhonePreview({ slide }: PhonePreviewProps) {
+export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
 
@@ -21,6 +22,12 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
   if (!slide) {
     return <EmptyPreview />;
   }
+
+  // Find the current slide index
+  const currentIndex = allSlides.findIndex(s => s.id === slide.id);
+  const progressPercentage = allSlides.length > 0 
+    ? Math.round(((currentIndex + 1) / allSlides.length) * 100) 
+    : 0;
 
   // Reset animation when slide changes
   useEffect(() => {
@@ -49,7 +56,12 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
   return (
     <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
       {/* Progress bar at the top */}
-      <ProgressBar slide={slide} />
+      <ProgressBar 
+        slide={slide} 
+        progress={progressPercentage} 
+        currentSlide={currentIndex + 1}
+        totalSlides={allSlides.length}
+      />
       
       <div 
         className="flex flex-1 flex-col px-6 relative overflow-auto"

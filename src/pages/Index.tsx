@@ -108,7 +108,7 @@ const Index = () => {
           </div>
         </div>
         <div className="flex-1 bg-gray-50 flex items-center justify-center">
-          <PhonePreview slide={selectedSlide} />
+          <PhonePreview slide={selectedSlide} allSlides={flow.slides} />
         </div>
       </div>
     </div>

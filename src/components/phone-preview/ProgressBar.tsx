@@ -6,9 +6,16 @@ import { Slide } from "@/types/editor";
 interface ProgressBarProps {
   slide: Slide;
   progress?: number;
+  currentSlide?: number;
+  totalSlides?: number;
 }
 
-export function ProgressBar({ slide, progress = 60 }: ProgressBarProps) {
+export function ProgressBar({ 
+  slide, 
+  progress = 60,
+  currentSlide,
+  totalSlides
+}: ProgressBarProps) {
   // If showProgressBar is explicitly set to false, don't render
   if (slide.showProgressBar === false) {
     return null;
@@ -29,6 +36,12 @@ export function ProgressBar({ slide, progress = 60 }: ProgressBarProps) {
 
   return (
     <div className="absolute top-0 left-0 right-0 px-4 pt-4 z-10">
+      {/* Show slide counter text if we have currentSlide and totalSlides */}
+      {currentSlide && totalSlides && (
+        <div className="flex justify-end mb-1 text-xs font-medium text-gray-600">
+          {currentSlide} / {totalSlides}
+        </div>
+      )}
       <Progress 
         value={progressValue} 
         className={getProgressBarHeight()}
