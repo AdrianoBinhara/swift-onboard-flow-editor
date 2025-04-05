@@ -84,7 +84,7 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Thin blue progress bar at the very top - no container */}
+        {/* Progress bar with padding for better visibility */}
         <ProgressBar 
           slide={{
             ...mergedSlide,
