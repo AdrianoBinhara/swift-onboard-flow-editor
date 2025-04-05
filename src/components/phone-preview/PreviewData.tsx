@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -25,25 +25,83 @@ interface UserResponse {
 }
 
 export function PreviewData({ open, onOpenChange, slides }: PreviewDataProps) {
-  // Create empty responses initially
-  const userResponses: UserResponse[] = slides.map(slide => {
-    let question = slide.title || "Untitled Question";
-    let sdkKey = slide.id.replace("slide-", "");
-    
-    return {
-      slideId: slide.id,
-      slideType: slide.type,
-      question,
-      answer: null, // Default to null answer (no response yet)
-      sdkKey: slide.type === "date" ? sdkKey.replace("slide-", "nextWorkout") : `key_${sdkKey}`
+  // Track user responses
+  const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
+  
+  // Listen for custom events from slide components
+  useEffect(() => {
+    const handleResponseEvent = (e: CustomEvent) => {
+      const { slideId, slideType, question, answer, sdkKey } = e.detail;
+      
+      setUserResponses(prev => {
+        // Check if this slideId already exists in the responses
+        const existingIndex = prev.findIndex(r => r.slideId === slideId);
+        
+        if (existingIndex >= 0) {
+          // Update existing response
+          const updated = [...prev];
+          updated[existingIndex] = { slideId, slideType, question, answer, sdkKey };
+          return updated;
+        } else {
+          // Add new response
+          return [...prev, { slideId, slideType, question, answer, sdkKey }];
+        }
+      });
     };
-  });
+    
+    // Add event listener for custom response events
+    window.addEventListener('user-response', handleResponseEvent as EventListener);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('user-response', handleResponseEvent as EventListener);
+    };
+  }, []);
+  
+  // Initialize empty responses for new slides
+  useEffect(() => {
+    // Map slides to initial empty responses
+    const initialResponses = slides.map(slide => {
+      let question = slide.title || "Untitled Question";
+      let sdkKey = slide.id.replace("slide-", "");
+      
+      return {
+        slideId: slide.id,
+        slideType: slide.type,
+        question,
+        answer: null, // Default to null answer (no response yet)
+        sdkKey: slide.type === "date" ? `nextWorkout${sdkKey}` : `key_${sdkKey}`
+      };
+    });
 
-  // Generate empty SDK Payload JSON
+    // Merge with existing responses, prioritizing existing ones
+    setUserResponses(prev => {
+      const mergedResponses: UserResponse[] = [];
+      
+      initialResponses.forEach(initial => {
+        const existing = prev.find(r => r.slideId === initial.slideId);
+        if (existing) {
+          mergedResponses.push(existing);
+        } else {
+          mergedResponses.push(initial);
+        }
+      });
+      
+      return mergedResponses;
+    });
+  }, [slides]);
+
+  // Generate SDK Payload from responses
   const sdkPayload = {
-    "app": {
-      // This will be filled as users interact with the app
-    }
+    app: userResponses.reduce((acc, response) => {
+      if (response.answer) {
+        return { 
+          ...acc, 
+          [response.sdkKey]: response.answer 
+        };
+      }
+      return acc;
+    }, {})
   };
 
   return (
