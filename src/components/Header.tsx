@@ -7,9 +7,10 @@ import { useState } from 'react';
 interface HeaderProps {
   flowName: string;
   onFlowNameChange: (name: string) => void;
+  onPublish: () => void;
 }
 
-export function Header({ flowName, onFlowNameChange }: HeaderProps) {
+export function Header({ flowName, onFlowNameChange, onPublish }: HeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [nameValue, setNameValue] = useState(flowName);
 
@@ -61,7 +62,7 @@ export function Header({ flowName, onFlowNameChange }: HeaderProps) {
         <Button variant="ghost" size="icon">
           <Code className="h-5 w-5" />
         </Button>
-        <Button className="ml-2">
+        <Button className="ml-2" onClick={onPublish}>
           <Share2 className="h-4 w-4 mr-2" />
           Publish
         </Button>

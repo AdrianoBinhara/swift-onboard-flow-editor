@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { SlideList } from "@/components/SlideList";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, Layers } from "lucide-react";
+import { SdkIntegration } from "@/components/SdkIntegration";
 
 const defaultGlobalStyles: GlobalStyles = {
   buttonColor: "#4299e1",
@@ -44,8 +46,12 @@ const Index = () => {
   const [flow, setFlow] = useState<OnboardingFlow>(defaultFlow);
   const [selectedSlideId, setSelectedSlideId] = useState<string | null>(flow.slides[0]?.id || null);
   const [editorTab, setEditorTab] = useState<"slide" | "global">("slide");
+  const [sdkIntegrationOpen, setSdkIntegrationOpen] = useState(false);
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
+
+  // Generate a stable app ID based on the flow name
+  const appId = `${flow.name.toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 10)}`;
 
   useEffect(() => {
     const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {
@@ -126,9 +132,17 @@ const Index = () => {
     toast.success("Global styles updated");
   };
 
+  const handleOpenSdkIntegration = () => {
+    setSdkIntegrationOpen(true);
+  };
+
   return (
     <div className="flex flex-col h-screen">
-      <Header flowName={flow.name} onFlowNameChange={handleFlowNameChange} />
+      <Header 
+        flowName={flow.name} 
+        onFlowNameChange={handleFlowNameChange} 
+        onPublish={handleOpenSdkIntegration}
+      />
       <div className="flex-1 flex overflow-hidden">
         <div className="w-2/5 flex flex-col border-r border-border">
           <div className="h-48 overflow-y-auto border-b border-border">
@@ -178,8 +192,16 @@ const Index = () => {
           />
         </div>
       </div>
+
+      {/* SDK Integration Dialog */}
+      <SdkIntegration
+        open={sdkIntegrationOpen}
+        onOpenChange={setSdkIntegrationOpen}
+        appId={appId}
+        appName={flow.name}
+      />
     </div>
   );
-};
+}
 
 export default Index;
