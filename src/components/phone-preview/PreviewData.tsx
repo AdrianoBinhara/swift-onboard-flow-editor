@@ -25,43 +25,24 @@ interface UserResponse {
 }
 
 export function PreviewData({ open, onOpenChange, slides }: PreviewDataProps) {
-  // In a real app, these would come from actual user interactions
-  // For now, we'll simulate some responses based on the slides
+  // Create empty responses initially
   const userResponses: UserResponse[] = slides.map(slide => {
     let question = slide.title || "Untitled Question";
     let sdkKey = slide.id.replace("slide-", "");
-    
-    // Default to null answer (no response yet)
-    let answer: string | null = null;
-    
-    // Simulate responses for demo purposes
-    if (slide.type === "input") {
-      answer = "Response recorded";
-      sdkKey = `key_${sdkKey}`;
-    } else if (slide.type === "choice" && slide.options && slide.options.length) {
-      answer = slide.options[0];
-      sdkKey = `key_${sdkKey}`;
-    } else if (slide.type === "date") {
-      answer = "Response recorded";
-      sdkKey = slide.id.replace("slide-", "nextWorkout");
-    }
     
     return {
       slideId: slide.id,
       slideType: slide.type,
       question,
-      answer,
-      sdkKey
+      answer: null, // Default to null answer (no response yet)
+      sdkKey: slide.type === "date" ? sdkKey.replace("slide-", "nextWorkout") : `key_${sdkKey}`
     };
   });
 
-  // Generate SDK Payload JSON
+  // Generate empty SDK Payload JSON
   const sdkPayload = {
     "app": {
-      "gender": "male",
-      "name": "John",
-      "workouts": "3-4",
-      "nextWorkout": "April 16, 2025"
+      // This will be filled as users interact with the app
     }
   };
 
@@ -88,35 +69,42 @@ export function PreviewData({ open, onOpenChange, slides }: PreviewDataProps) {
           {/* User Responses */}
           <div>
             <h3 className="text-sm font-medium mb-2">User Responses:</h3>
-            <div className="space-y-4">
-              {userResponses.filter(r => r.answer).map((response, index) => (
-                <div key={index} className="border rounded-md p-3">
-                  {response.slideType === "input" && (
-                    <>
-                      <p className="text-sm"><span className="font-medium">Input:</span> {response.question}</p>
-                      <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
-                      <p className="text-sm mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
-                    </>
-                  )}
-                  
-                  {response.slideType === "choice" && (
-                    <>
-                      <p className="text-sm"><span className="font-medium">Choice:</span> {response.question}</p>
-                      <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
-                      <p className="text-sm mt-1"><span className="font-medium">Choice:</span> {response.answer}</p>
-                    </>
-                  )}
-                  
-                  {response.slideType === "date" && (
-                    <>
-                      <p className="text-sm"><span className="font-medium">Date:</span> {response.question}</p>
-                      <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
-                      <p className="text-sm mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
+            {userResponses.some(r => r.answer) ? (
+              <div className="space-y-4">
+                {userResponses.filter(r => r.answer).map((response, index) => (
+                  <div key={index} className="border rounded-md p-3">
+                    {response.slideType === "input" && (
+                      <>
+                        <p className="text-sm"><span className="font-medium">Input:</span> {response.question}</p>
+                        <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
+                        <p className="text-sm mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
+                      </>
+                    )}
+                    
+                    {response.slideType === "choice" && (
+                      <>
+                        <p className="text-sm"><span className="font-medium">Choice:</span> {response.question}</p>
+                        <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
+                        <p className="text-sm mt-1"><span className="font-medium">Choice:</span> {response.answer}</p>
+                      </>
+                    )}
+                    
+                    {response.slideType === "date" && (
+                      <>
+                        <p className="text-sm"><span className="font-medium">Date:</span> {response.question}</p>
+                        <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
+                        <p className="text-sm mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center p-6 text-center border border-dashed rounded-md">
+                <p className="text-muted-foreground">No responses yet</p>
+                <p className="text-xs text-muted-foreground mt-1">Responses will appear here as users interact with the slides</p>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
