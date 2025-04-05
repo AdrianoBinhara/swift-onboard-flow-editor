@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { SlideList } from "@/components/SlideList";
 import { SlideEditor } from "@/components/SlideEditor";
@@ -47,6 +47,19 @@ const Index = () => {
   const [editorTab, setEditorTab] = useState<"slide" | "global">("slide");
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
+
+  // Add event listener to handle slide changes from the phone preview
+  useEffect(() => {
+    const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {
+      setSelectedSlideId(event.detail.slideId);
+    };
+
+    window.addEventListener('slide-change', handleSlideChange as EventListener);
+
+    return () => {
+      window.removeEventListener('slide-change', handleSlideChange as EventListener);
+    };
+  }, []);
 
   const handleFlowNameChange = (name: string) => {
     setFlow((prev) => ({ ...prev, name }));

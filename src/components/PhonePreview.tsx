@@ -9,7 +9,7 @@ import { SlideContent } from "./phone-preview/SlideContent";
 import { ContinueButton } from "./phone-preview/ContinueButton";
 import { ReplayButton } from "./phone-preview/ReplayButton";
 import { PreviewData } from "./phone-preview/PreviewData";
-import { Code } from "lucide-react";
+import { Code, ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface PhonePreviewProps {
@@ -22,6 +22,7 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
   const [previewDataOpen, setPreviewDataOpen] = useState(false);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
   // If no slide is selected, show empty preview
   if (!slide) {
@@ -36,6 +37,13 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   const progressPercentage = allSlides.length > 0 
     ? Math.round(((currentIndex + 1) / allSlides.length) * 100) 
     : 0;
+
+  // Update current slide index when slide changes
+  useEffect(() => {
+    if (currentIndex >= 0) {
+      setCurrentSlideIndex(currentIndex);
+    }
+  }, [currentIndex]);
 
   // Reset animation when slide changes
   useEffect(() => {
@@ -76,6 +84,32 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
           className="flex flex-1 flex-col px-6 relative overflow-auto"
           style={getBackgroundStyle(mergedSlide)}
         >
+          {/* Back button - only show if not on the first slide */}
+          {currentIndex > 0 && (
+            <div className="absolute top-4 left-2 z-10">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="flex items-center gap-1 text-sm opacity-80 hover:opacity-100"
+                onClick={() => {
+                  // Navigate to previous slide
+                  const prevSlide = allSlides[currentIndex - 1];
+                  if (prevSlide) {
+                    setIsAnimating(false);
+                    // Update the slide ID - This will trigger the parent component to update the selected slide
+                    const event = new CustomEvent('slide-change', { 
+                      detail: { slideId: prevSlide.id } 
+                    });
+                    window.dispatchEvent(event);
+                  }
+                }}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+            </div>
+          )}
+
           {/* Content area with vertical and horizontal alignment */}
           <div className={cn(
             "flex flex-1 w-full justify-center", 
