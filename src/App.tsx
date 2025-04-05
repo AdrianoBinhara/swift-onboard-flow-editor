@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
-  // Create a client instance inside the component
+  // Create a client instance inside the component function body
   const [queryClient] = useState(() => new QueryClient());
 
   return (
