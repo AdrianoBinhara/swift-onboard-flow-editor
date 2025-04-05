@@ -54,32 +54,37 @@ export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
   }, [isAnimating, slide]);
 
   return (
-    <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-      {/* Progress bar at the top */}
-      <ProgressBar 
-        slide={slide} 
-        progress={progressPercentage} 
-        currentSlide={currentIndex + 1}
-        totalSlides={allSlides.length}
-      />
-      
-      <div 
-        className="flex flex-1 flex-col px-6 relative overflow-auto"
-        style={getBackgroundStyle(slide)}
-      >
-        {/* Content area with vertical and horizontal alignment */}
-        <div className={cn(
-          "flex flex-1 w-full justify-center", 
-          getVerticalAlignment(slide.verticalAlignment)
-        )}>
-          <SlideContent slide={slide} isAnimating={isAnimating} />
-        </div>
+    <div className="flex flex-col items-center">
+      <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
+        {/* Progress bar at the top */}
+        <ProgressBar 
+          slide={slide} 
+          progress={progressPercentage} 
+          currentSlide={currentIndex + 1}
+          totalSlides={allSlides.length}
+        />
         
-        {/* Button at the specified position */}
-        <ContinueButton slide={slide} />
+        <div 
+          className="flex flex-1 flex-col px-6 relative overflow-auto"
+          style={getBackgroundStyle(slide)}
+        >
+          {/* Content area with vertical and horizontal alignment */}
+          <div className={cn(
+            "flex flex-1 w-full justify-center", 
+            getVerticalAlignment(slide.verticalAlignment)
+          )}>
+            <SlideContent slide={slide} isAnimating={isAnimating} />
+          </div>
+          
+          {/* Button at the specified position */}
+          <ContinueButton slide={slide} />
+        </div>
       </div>
-
-      <ReplayButton onReplay={handleReplayAnimation} />
+      
+      {/* Replay button now outside the phone frame */}
+      <div className="mt-4">
+        <ReplayButton onReplay={handleReplayAnimation} />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Button } from "../ui/button";
+import { RotateCcw } from "lucide-react";
 
 interface ReplayButtonProps {
   onReplay: () => void;
@@ -8,15 +9,14 @@ interface ReplayButtonProps {
 
 export function ReplayButton({ onReplay }: ReplayButtonProps) {
   return (
-    <div className="absolute bottom-4 right-4">
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onReplay}
-        className="text-xs"
-      >
-        Replay Animation
-      </Button>
-    </div>
+    <Button
+      size="sm"
+      variant="outline"
+      onClick={onReplay}
+      className="flex items-center gap-2"
+    >
+      <RotateCcw className="h-4 w-4" />
+      Replay Animation
+    </Button>
   );
 }
