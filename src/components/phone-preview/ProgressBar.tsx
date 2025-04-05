@@ -45,8 +45,8 @@ export function ProgressBar({
   const backgroundStyle = getBackgroundStyle(slide);
 
   return (
-    <div className="w-full" style={backgroundStyle}>
-      <div className="flex items-center pt-2 pb-1 px-4">
+    <div className="w-full pt-4" style={backgroundStyle}>
+      <div className="flex items-center px-4 pb-2">
         {/* Back button displayed at the left side, on the same line as progress bar */}
         {showBackButton && (
           <Button
