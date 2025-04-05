@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 
 interface SdkIntegrationProps {
@@ -155,9 +156,11 @@ cd ios && pod install`;
                   Installation with Swift Package Manager
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
-                    <code>{swiftPackageSetup}</code>
-                  </pre>
+                  <ScrollArea className="h-[120px] w-full rounded-md border">
+                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
+                      <code>{swiftPackageSetup}</code>
+                    </pre>
+                  </ScrollArea>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -177,9 +180,11 @@ cd ios && pod install`;
                   App Setup
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
-                    <code>{swiftCode}</code>
-                  </pre>
+                  <ScrollArea className="h-[120px] w-full rounded-md border">
+                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
+                      <code>{swiftCode}</code>
+                    </pre>
+                  </ScrollArea>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -199,9 +204,11 @@ cd ios && pod install`;
                   ContentView
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
-                    <code>{swiftUIContentView}</code>
-                  </pre>
+                  <ScrollArea className="h-[120px] w-full rounded-md border">
+                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
+                      <code>{swiftUIContentView}</code>
+                    </pre>
+                  </ScrollArea>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -223,9 +230,11 @@ cd ios && pod install`;
                   Installation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
-                    <code>{reactNativeInstallation}</code>
-                  </pre>
+                  <ScrollArea className="h-[100px] w-full rounded-md border">
+                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
+                      <code>{reactNativeInstallation}</code>
+                    </pre>
+                  </ScrollArea>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -245,9 +254,11 @@ cd ios && pod install`;
                   Implementation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
-                    <code>{reactNativeCode}</code>
-                  </pre>
+                  <ScrollArea className="h-[120px] w-full rounded-md border">
+                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
+                      <code>{reactNativeCode}</code>
+                    </pre>
+                  </ScrollArea>
                   <Button 
                     size="sm" 
                     variant="outline" 
