@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Slide, GlobalStyles } from "@/types/editor";
 import { cn } from "@/lib/utils";
@@ -95,14 +96,16 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Progress bar with back button functionality integrated */}
+        {/* Progress bar with enhanced props */}
         <ProgressBar 
           slide={{
             ...mergedSlide,
             progressBarHeight: 'thin',
-            progressBarColor: '#4299e1', // Blue color as shown in screenshot
+            progressBarColor: mergedSlide.progressBarColor || '#4299e1',
           }} 
           progress={progressPercentage}
+          currentSlide={currentIndex + 1}
+          totalSlides={allSlides.length}
           showBackButton={currentIndex > 0}
           onBack={navigateToPrevSlide}
         />

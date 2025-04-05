@@ -31,8 +31,9 @@ export function ProgressBar({
   const getProgressBarHeight = () => {
     switch (slide.progressBarHeight) {
       case 'thin': return 'h-1';
+      case 'medium': return 'h-1.5';
       case 'thick': return 'h-2';
-      default: return 'h-1'; // Set default to thin to match the image
+      default: return 'h-1'; // Default to thin
     }
   };
 
@@ -41,37 +42,55 @@ export function ProgressBar({
     ? slide.progressPercentage 
     : progress;
 
+  // Format text for current and total slides
+  const slideCountText = currentSlide && totalSlides 
+    ? `${currentSlide} of ${totalSlides}` 
+    : '';
+
   // Get background style from the slide
   const backgroundStyle = getBackgroundStyle(slide);
 
   return (
-    <div className="w-full pt-4" style={backgroundStyle}>
-      <div className="flex items-center px-4 pb-2">
-        {/* Back button displayed at the left side, on the same line as progress bar */}
-        <div className="w-16">
-          {showBackButton && (
-            <Button
-              size="sm"
-              variant="ghost"
-              className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto"
-              onClick={onBack}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
+    <div 
+      className="w-full pt-4 transition-all duration-300" 
+      style={backgroundStyle}
+    >
+      <div className="flex flex-col px-4 pb-2">
+        <div className="flex items-center mb-1">
+          {/* Back button displayed at the left side */}
+          <div className="w-16">
+            {showBackButton && (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto hover:text-gray-700 transition-colors"
+                onClick={onBack}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+            )}
+          </div>
+          
+          {/* Slide count displayed on the right */}
+          {slideCountText && (
+            <div className="text-xs text-gray-500 ml-auto">
+              {slideCountText}
+            </div>
           )}
         </div>
         
-        {/* Progress bar filling the remaining space */}
-        <div className="flex-1">
-          <Progress 
-            value={progressValue} 
-            className={getProgressBarHeight()}
-            style={{ 
-              '--progress-bar-color': slide.progressBarColor || '#4299e1', // Default to blue color from screenshot
-            } as React.CSSProperties}
-          />
-        </div>
+        {/* Progress bar filling the entire width */}
+        <Progress 
+          value={progressValue} 
+          className={cn(
+            getProgressBarHeight(),
+            "rounded-full overflow-hidden backdrop-blur-sm"
+          )}
+          style={{ 
+            '--progress-bar-color': slide.progressBarColor || '#4299e1',
+          } as React.CSSProperties}
+        />
       </div>
     </div>
   );
