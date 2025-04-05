@@ -3,10 +3,27 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { SlideList } from "@/components/SlideList";
 import { SlideEditor } from "@/components/SlideEditor";
+import { GlobalStylesEditor } from "@/components/GlobalStylesEditor";
 import { PhonePreview } from "@/components/PhonePreview";
-import { OnboardingFlow, Slide } from "@/types/editor";
+import { OnboardingFlow, Slide, GlobalStyles } from "@/types/editor";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Settings, Layers } from "lucide-react";
+
+const defaultGlobalStyles: GlobalStyles = {
+  buttonColor: "#4299e1",
+  buttonTextColor: "#ffffff",
+  buttonPosition: "bottom",
+  buttonSize: "medium",
+  buttonIcon: "arrow-right",
+  showProgressBar: true,
+  progressBarColor: "#4299e1",
+  progressBarHeight: "medium",
+  animation: "fade",
+  titleFontSize: "medium",
+  descriptionFontSize: "medium",
+};
 
 const defaultFlow: OnboardingFlow = {
   id: "flow-1",
@@ -21,11 +38,13 @@ const defaultFlow: OnboardingFlow = {
       horizontalAlignment: "center",
     },
   ],
+  globalStyles: defaultGlobalStyles,
 };
 
 const Index = () => {
   const [flow, setFlow] = useState<OnboardingFlow>(defaultFlow);
   const [selectedSlideId, setSelectedSlideId] = useState<string | null>(flow.slides[0]?.id || null);
+  const [editorTab, setEditorTab] = useState<"slide" | "global">("slide");
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
 
@@ -64,6 +83,7 @@ const Index = () => {
     }));
 
     setSelectedSlideId(newSlide.id);
+    setEditorTab("slide");
     toast.success(`New ${type} slide added`);
   };
 
@@ -89,6 +109,14 @@ const Index = () => {
     }));
   };
 
+  const handleUpdateGlobalStyles = (updatedStyles: GlobalStyles) => {
+    setFlow((prev) => ({
+      ...prev,
+      globalStyles: updatedStyles,
+    }));
+    toast.success("Global styles updated");
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <Header flowName={flow.name} onFlowNameChange={handleFlowNameChange} />
@@ -98,17 +126,46 @@ const Index = () => {
             <SlideList
               slides={flow.slides}
               selectedSlideId={selectedSlideId}
-              onSelectSlide={setSelectedSlideId}
+              onSelectSlide={(id) => {
+                setSelectedSlideId(id);
+                setEditorTab("slide");
+              }}
               onAddSlide={handleAddSlide}
               onDeleteSlide={handleDeleteSlide}
             />
           </div>
           <div className="flex-1 overflow-y-auto">
-            <SlideEditor slide={selectedSlide} onSlideUpdate={handleUpdateSlide} />
+            <Tabs value={editorTab} onValueChange={(value) => setEditorTab(value as "slide" | "global")}>
+              <TabsList className="w-full mb-2 sticky top-0 z-10 bg-background">
+                <TabsTrigger value="slide" className="flex-1 flex items-center gap-2">
+                  <Layers className="h-4 w-4" />
+                  <span>Slide Editor</span>
+                </TabsTrigger>
+                <TabsTrigger value="global" className="flex-1 flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  <span>Global Styles</span>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="slide" className="focus-visible:outline-none">
+                <SlideEditor slide={selectedSlide} onSlideUpdate={handleUpdateSlide} />
+              </TabsContent>
+
+              <TabsContent value="global" className="focus-visible:outline-none">
+                <GlobalStylesEditor
+                  globalStyles={flow.globalStyles}
+                  onGlobalStylesUpdate={handleUpdateGlobalStyles}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
         <div className="flex-1 bg-gray-50 flex items-center justify-center">
-          <PhonePreview slide={selectedSlide} allSlides={flow.slides} />
+          <PhonePreview 
+            slide={selectedSlide} 
+            allSlides={flow.slides} 
+            globalStyles={flow.globalStyles}
+          />
         </div>
       </div>
     </div>

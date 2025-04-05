@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Slide } from "@/types/editor";
+import { Slide, GlobalStyles } from "@/types/editor";
 import { cn } from "@/lib/utils";
 import { getBackgroundStyle, getVerticalAlignment } from "./phone-preview/utils";
 import { EmptyPreview } from "./phone-preview/EmptyPreview";
@@ -14,10 +14,11 @@ import { Button } from "./ui/button";
 
 interface PhonePreviewProps {
   slide: Slide | null;
-  allSlides?: Slide[]; // Add allSlides prop
+  allSlides?: Slide[]; 
+  globalStyles?: GlobalStyles;
 }
 
-export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
+export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePreviewProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
   const [previewDataOpen, setPreviewDataOpen] = useState(false);
@@ -26,6 +27,9 @@ export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
   if (!slide) {
     return <EmptyPreview />;
   }
+
+  // Merge global styles with slide-specific styles for background and progress bar
+  const mergedSlide = globalStyles ? { ...globalStyles, ...slide } : slide;
 
   // Find the current slide index
   const currentIndex = allSlides.findIndex(s => s.id === slide.id);
@@ -62,7 +66,7 @@ export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
         {/* Progress bar at the top */}
         <ProgressBar 
-          slide={slide} 
+          slide={mergedSlide} 
           progress={progressPercentage} 
           currentSlide={currentIndex + 1}
           totalSlides={allSlides.length}
@@ -70,18 +74,18 @@ export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
         
         <div 
           className="flex flex-1 flex-col px-6 relative overflow-auto"
-          style={getBackgroundStyle(slide)}
+          style={getBackgroundStyle(mergedSlide)}
         >
           {/* Content area with vertical and horizontal alignment */}
           <div className={cn(
             "flex flex-1 w-full justify-center", 
-            getVerticalAlignment(slide.verticalAlignment)
+            getVerticalAlignment(mergedSlide.verticalAlignment)
           )}>
-            <SlideContent slide={slide} isAnimating={isAnimating} />
+            <SlideContent slide={slide} isAnimating={isAnimating} globalStyles={globalStyles} />
           </div>
           
           {/* Button at the specified position */}
-          <ContinueButton slide={slide} />
+          <ContinueButton slide={mergedSlide} />
         </div>
       </div>
       

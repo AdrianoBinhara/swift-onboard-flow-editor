@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Slide } from "@/types/editor";
+import { Slide, GlobalStyles } from "@/types/editor";
 import { ImageSlide } from "./slide-types/ImageSlide";
 import { VideoSlide } from "./slide-types/VideoSlide";
 import { ChoiceSlide } from "./slide-types/ChoiceSlide";
@@ -11,10 +11,14 @@ import { BaseSlideContent } from "./BaseSlideContent";
 interface SlideContentProps {
   slide: Slide;
   isAnimating: boolean;
+  globalStyles?: GlobalStyles;
 }
 
-export function SlideContent({ slide, isAnimating }: SlideContentProps) {
-  return <BaseSlideContent slide={slide} isAnimating={isAnimating} />;
+export function SlideContent({ slide, isAnimating, globalStyles }: SlideContentProps) {
+  // Merge global styles with slide-specific styles, with slide styles taking precedence
+  const mergedSlide = globalStyles ? { ...globalStyles, ...slide } : slide;
+  
+  return <BaseSlideContent slide={mergedSlide} isAnimating={isAnimating} />;
 }
 
 // Export this function for use in BaseSlideContent

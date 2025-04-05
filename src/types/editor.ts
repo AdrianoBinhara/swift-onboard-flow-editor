@@ -40,10 +40,32 @@ export interface Slide {
   showProgressBar?: boolean;
 }
 
+export interface GlobalStyles {
+  backgroundColor?: string;
+  backgroundImage?: string;
+  backgroundGradient?: string;
+  titleColor?: string;
+  descriptionColor?: string;
+  titleFontSize?: 'small' | 'medium' | 'large';
+  descriptionFontSize?: 'small' | 'medium' | 'large';
+  buttonColor?: string;
+  buttonTextColor?: string;
+  buttonPosition?: 'bottom' | 'below-content';
+  buttonIcon?: 'arrow-right' | 'chevron-right' | 'chevron-down' | 'none';
+  buttonSize?: 'small' | 'medium' | 'large';
+  buttonFullWidth?: boolean;
+  roundedCorners?: boolean;
+  progressBarColor?: string;
+  progressBarHeight?: 'thin' | 'medium' | 'thick';
+  showProgressBar?: boolean;
+  animation?: 'none' | 'fade' | 'slide-up' | 'slide-left' | 'zoom';
+}
+
 export interface OnboardingFlow {
   id: string;
   name: string;
   slides: Slide[];
+  globalStyles: GlobalStyles;
 }
 
 export interface EditorState {
