@@ -17,7 +17,7 @@ interface SlideContentProps {
 export function SlideContent({ slide, isAnimating }: SlideContentProps) {
   return (
     <div className={cn(
-      "flex flex-col max-w-[280px]",
+      "flex flex-col max-w-[280px] w-full mx-auto", // Added w-full and mx-auto to center content
       getHorizontalAlignment(slide.horizontalAlignment),
       getAnimationClass(isAnimating, slide.animation)
     )}>
