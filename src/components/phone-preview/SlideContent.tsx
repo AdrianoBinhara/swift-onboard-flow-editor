@@ -22,9 +22,7 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
       getHorizontalAlignment(slide.horizontalAlignment),
       getAnimationClass(isAnimating, slide.animation)
     )}>
-      {/* Render media content (image or video) at the top if present */}
-      <SlideTypeContent slide={slide} />
-      
+      {/* Display title first */}
       {slide.title && (
         <h2 
           className={cn(
@@ -37,6 +35,7 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
         </h2>
       )}
 
+      {/* Display description next */}
       {slide.description && (
         <p 
           className={cn(
@@ -48,6 +47,9 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
           {slide.description}
         </p>
       )}
+      
+      {/* Render media content (image or video) or choice/input options after title and description */}
+      <SlideTypeContent slide={slide} />
     </div>
   );
 }
