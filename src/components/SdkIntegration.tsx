@@ -72,7 +72,7 @@ export default function App() {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-xl">Integrate with your app</DialogTitle>
+          <DialogTitle className="text-xl">Integrate with FlowKit</DialogTitle>
           <DialogDescription>
             Add your onboarding flow to your mobile app with just a few lines of code.
           </DialogDescription>
