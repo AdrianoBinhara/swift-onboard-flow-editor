@@ -34,14 +34,14 @@ export function SdkIntegration({ open, onOpenChange, appId, appName }: SdkIntegr
     }, 2000);
   };
 
-  // Swift code sample
+  // Swift code sample with new SDK name
   const swiftCode = `import SwiftUI
-import Onboardzy
+import FlowKit
 
 @main
 struct ${appName.replace(/\s+/g, '')}App: App {
     init() {
-        Onboardzy.configure(
+        FlowKit.configure(
             appId: "${appId}"
         )
     }
@@ -53,18 +53,18 @@ struct ${appName.replace(/\s+/g, '')}App: App {
     }
 }`;
 
-  // React Native code sample
+  // React Native code sample with new SDK name
   const reactNativeCode = `import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { OnboardzyProvider } from 'react-onboardzy';
+import { FlowKitProvider } from 'react-flowkit';
 
 export default function App() {
   return (
-    <OnboardzyProvider appId="${appId}">
+    <FlowKitProvider appId="${appId}">
       <NavigationContainer>
         {/* Your app content */}
       </NavigationContainer>
-    </OnboardzyProvider>
+    </FlowKitProvider>
   );
 }`;
 
@@ -124,10 +124,10 @@ export default function App() {
               <div className="mt-4 p-3 bg-muted rounded-md">
                 <h4 className="text-sm font-medium mb-2">How it works</h4>
                 <ol className="text-xs space-y-1 text-muted-foreground list-decimal pl-4">
-                  <li>Import the Onboardzy SDK</li>
+                  <li>Import the FlowKit SDK</li>
                   <li>Configure with your app ID</li>
                   <li>Add <code className="text-xs bg-muted-foreground/20 px-1 rounded">.withOnboarding()</code> to any view</li>
-                  <li>Access user data via <code className="text-xs bg-muted-foreground/20 px-1 rounded">Onboardzy.userData</code></li>
+                  <li>Access user data via <code className="text-xs bg-muted-foreground/20 px-1 rounded">FlowKit.userData</code></li>
                 </ol>
               </div>
             </TabsContent>
@@ -150,10 +150,10 @@ export default function App() {
               <div className="mt-4 p-3 bg-muted rounded-md">
                 <h4 className="text-sm font-medium mb-2">How it works</h4>
                 <ol className="text-xs space-y-1 text-muted-foreground list-decimal pl-4">
-                  <li>Install with <code className="text-xs bg-muted-foreground/20 px-1 rounded">npm install react-onboardzy</code></li>
-                  <li>Wrap your app with the OnboardzyProvider</li>
+                  <li>Install with <code className="text-xs bg-muted-foreground/20 px-1 rounded">npm install react-flowkit</code></li>
+                  <li>Wrap your app with the FlowKitProvider</li>
                   <li>Configure with your app ID</li>
-                  <li>Access user responses via <code className="text-xs bg-muted-foreground/20 px-1 rounded">useOnboardzy()</code> hook</li>
+                  <li>Access user responses via <code className="text-xs bg-muted-foreground/20 px-1 rounded">useFlowKit()</code> hook</li>
                 </ol>
               </div>
             </TabsContent>
