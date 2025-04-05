@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Slide } from "@/types/editor";
 import { cn } from "@/lib/utils";
@@ -13,15 +12,43 @@ import { Calendar } from "@/components/ui/calendar";
 
 interface DateSlideProps {
   slide: Slide;
+  onSelect?: (date: string) => void;
 }
 
-export function DateSlide({ slide }: DateSlideProps) {
+export function DateSlide({ slide, onSelect }: DateSlideProps) {
   // State for controlling the calendar open/close state
   const [calendarOpen, setCalendarOpen] = useState(false);
   // State to track the selected date locally
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     slide.defaultDate ? new Date(slide.defaultDate) : undefined
   );
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      setSelectedDate(date);
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      
+      // If onSelect prop is provided, call it
+      if (onSelect) {
+        onSelect(formattedDate);
+      } else {
+        // Otherwise dispatch the event directly
+        const responseEvent = new CustomEvent('user-response', {
+          detail: {
+            slideId: slide.id,
+            slideType: 'date',
+            question: slide.title || "Untitled Question",
+            answer: formattedDate,
+            sdkKey: `nextWorkout${slide.id.replace("slide-", "")}`
+          }
+        });
+        
+        window.dispatchEvent(responseEvent);
+      }
+      
+      setCalendarOpen(false);
+    }
+  };
 
   return (
     <div className="mb-6 w-full">
@@ -47,13 +74,7 @@ export function DateSlide({ slide }: DateSlideProps) {
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={(date) => {
-              if (date) {
-                setSelectedDate(date);
-                console.log("Selected date:", date);
-                setCalendarOpen(false);
-              }
-            }}
+            onSelect={handleDateSelect}
             disabled={(date) => {
               if (slide.minDate && new Date(slide.minDate) > date) {
                 return true;

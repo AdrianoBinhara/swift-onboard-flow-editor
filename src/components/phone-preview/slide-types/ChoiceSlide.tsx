@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Slide } from "@/types/editor";
 import { cn } from "@/lib/utils";
@@ -6,9 +5,10 @@ import { Check } from "lucide-react";
 
 interface ChoiceSlideProps {
   slide: Slide;
+  onSelect?: (option: string) => void;
 }
 
-export function ChoiceSlide({ slide }: ChoiceSlideProps) {
+export function ChoiceSlide({ slide, onSelect }: ChoiceSlideProps) {
   // State for tracking the selected choice option
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   
@@ -16,6 +16,28 @@ export function ChoiceSlide({ slide }: ChoiceSlideProps) {
   const displayOptions = slide.options && slide.options.length > 0 
     ? slide.options 
     : ["Option 1", "Option 2"];
+    
+  const handleChoiceSelect = (option: string) => {
+    setSelectedChoice(option);
+    
+    // If onSelect prop is provided, call it
+    if (onSelect) {
+      onSelect(option);
+    } else {
+      // Otherwise dispatch the event directly
+      const responseEvent = new CustomEvent('user-response', {
+        detail: {
+          slideId: slide.id,
+          slideType: 'choice',
+          question: slide.title || "Untitled Question",
+          answer: option,
+          sdkKey: `key_${slide.id.replace("slide-", "")}`
+        }
+      });
+      
+      window.dispatchEvent(responseEvent);
+    }
+  };
     
   return (
     <div className="flex flex-col gap-2 mb-6 w-full">
@@ -35,7 +57,7 @@ export function ChoiceSlide({ slide }: ChoiceSlideProps) {
               ? (slide.buttonTextColor || 'black')
               : (slide.buttonColor || 'hsl(var(--border))')
           }}
-          onClick={() => setSelectedChoice(option)}
+          onClick={() => handleChoiceSelect(option)}
         >
           <div className="flex items-center justify-between">
             <span>{option}</span>
