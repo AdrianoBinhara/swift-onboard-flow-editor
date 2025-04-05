@@ -8,6 +8,9 @@ import { ProgressBar } from "./phone-preview/ProgressBar";
 import { SlideContent } from "./phone-preview/SlideContent";
 import { ContinueButton } from "./phone-preview/ContinueButton";
 import { ReplayButton } from "./phone-preview/ReplayButton";
+import { PreviewData } from "./phone-preview/PreviewData";
+import { Code } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface PhonePreviewProps {
   slide: Slide | null;
@@ -17,6 +20,7 @@ interface PhonePreviewProps {
 export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
+  const [previewDataOpen, setPreviewDataOpen] = useState(false);
 
   // If no slide is selected, show empty preview
   if (!slide) {
@@ -81,10 +85,26 @@ export function PhonePreview({ slide, allSlides = [] }: PhonePreviewProps) {
         </div>
       </div>
       
-      {/* Replay button now outside the phone frame */}
-      <div className="mt-4">
+      {/* Controls below the phone frame */}
+      <div className="mt-4 flex items-center gap-2">
         <ReplayButton onReplay={handleReplayAnimation} />
+        <Button 
+          size="sm"
+          variant="outline"
+          className="flex items-center gap-2"
+          onClick={() => setPreviewDataOpen(true)}
+        >
+          <Code className="h-4 w-4" />
+          Preview Data
+        </Button>
       </div>
+
+      {/* Preview Data Dialog */}
+      <PreviewData 
+        open={previewDataOpen} 
+        onOpenChange={setPreviewDataOpen} 
+        slides={allSlides}
+      />
     </div>
   );
 }
