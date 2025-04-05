@@ -1,3 +1,4 @@
+
 import { Slide } from "@/types/editor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -15,7 +16,8 @@ import {
   Type,
   MoveHorizontal,
   CornerDownRight,
-  X
+  X,
+  CalendarIcon
 } from "lucide-react";
 import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
@@ -28,6 +30,14 @@ import {
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Separator } from "./ui/separator";
 import { Switch } from "./ui/switch";
+import { Calendar } from "./ui/calendar";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "./ui/popover";
+import { useState } from "react";
 
 interface SlideEditorProps {
   slide: Slide | null;
@@ -199,6 +209,157 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
                       {type}
                     </Button>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {slide.type === 'date' && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="defaultDate" className="mb-2 block">Default Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="defaultDate"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !slide.defaultDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {slide.defaultDate ? (
+                        format(new Date(slide.defaultDate), "PPP")
+                      ) : (
+                        <span>Pick a default date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={slide.defaultDate ? new Date(slide.defaultDate) : undefined}
+                      onSelect={(date) => {
+                        if (date) {
+                          handleFieldChange('defaultDate', date.toISOString());
+                        } else {
+                          handleFieldChange('defaultDate', undefined);
+                        }
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              
+              <div>
+                <Label htmlFor="datePlaceholder">Placeholder Text</Label>
+                <Input
+                  id="datePlaceholder"
+                  value={slide.datePlaceholder || ''}
+                  onChange={(e) => handleFieldChange('datePlaceholder', e.target.value)}
+                  placeholder="Select a date..."
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <Label htmlFor="dateRequired">Required</Label>
+                <Switch
+                  id="dateRequired"
+                  checked={slide.dateRequired || false}
+                  onCheckedChange={(checked) => handleFieldChange('dateRequired', checked)}
+                />
+              </div>
+              
+              <div>
+                <Label className="mb-2 block">Date Constraints</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="minDate" className="text-sm">Minimum Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="minDate"
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal mt-1",
+                            !slide.minDate && "text-muted-foreground"
+                          )}
+                        >
+                          {slide.minDate ? (
+                            format(new Date(slide.minDate), "PPP")
+                          ) : (
+                            <span>No minimum</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <div className="p-2 flex justify-between border-b">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleFieldChange('minDate', undefined)}
+                          >
+                            Clear
+                          </Button>
+                        </div>
+                        <Calendar
+                          mode="single"
+                          selected={slide.minDate ? new Date(slide.minDate) : undefined}
+                          onSelect={(date) => {
+                            if (date) {
+                              handleFieldChange('minDate', date.toISOString());
+                            }
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="maxDate" className="text-sm">Maximum Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="maxDate"
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal mt-1",
+                            !slide.maxDate && "text-muted-foreground"
+                          )}
+                        >
+                          {slide.maxDate ? (
+                            format(new Date(slide.maxDate), "PPP")
+                          ) : (
+                            <span>No maximum</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <div className="p-2 flex justify-between border-b">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleFieldChange('maxDate', undefined)}
+                          >
+                            Clear
+                          </Button>
+                        </div>
+                        <Calendar
+                          mode="single"
+                          selected={slide.maxDate ? new Date(slide.maxDate) : undefined}
+                          onSelect={(date) => {
+                            if (date) {
+                              handleFieldChange('maxDate', date.toISOString());
+                            }
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
             </div>

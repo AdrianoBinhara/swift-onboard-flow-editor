@@ -42,6 +42,13 @@ const Index = () => {
       horizontalAlignment: "center",
     };
 
+    // Add type-specific default properties
+    if (type === "date") {
+      newSlide.title = "Select a Date";
+      newSlide.description = "Please choose a date to continue";
+      newSlide.datePlaceholder = "Select a date...";
+    }
+
     setFlow((prev) => ({
       ...prev,
       slides: [...prev.slides, newSlide],
