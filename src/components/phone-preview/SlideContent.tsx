@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Slide } from "@/types/editor";
 import { cn } from "@/lib/utils";
@@ -64,6 +63,10 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
 function SlideTypeContent({ slide }: { slide: Slide }) {
   // New state for controlling the calendar open/close state
   const [calendarOpen, setCalendarOpen] = useState(false);
+  // New state to track the selected date locally
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    slide.defaultDate ? new Date(slide.defaultDate) : undefined
+  );
 
   switch (slide.type) {
     case 'image':
@@ -165,20 +168,23 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
                 onClick={() => setCalendarOpen(true)}
               >
                 <Calendar className="mr-2 h-4 w-4 opacity-70" />
-                <span className={slide.defaultDate ? "" : "text-muted-foreground"}>
-                  {slide.defaultDate ? format(new Date(slide.defaultDate), 'PPP') : (slide.datePlaceholder || "Select a date...")}
+                <span className={selectedDate ? "" : "text-muted-foreground"}>
+                  {selectedDate 
+                    ? format(selectedDate, 'PPP') 
+                    : (slide.datePlaceholder || "Select a date...")}
                 </span>
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="center">
               <CalendarComponent
                 mode="single"
-                selected={slide.defaultDate ? new Date(slide.defaultDate) : undefined}
+                selected={selectedDate}
                 onSelect={(date) => {
-                  // In a real app we would update the slide here
-                  // We're just demonstrating the UI for now
-                  console.log("Selected date:", date);
-                  setCalendarOpen(false);
+                  if (date) {
+                    setSelectedDate(date);
+                    console.log("Selected date:", date);
+                    setCalendarOpen(false);
+                  }
                 }}
                 disabled={(date) => {
                   if (slide.minDate && new Date(slide.minDate) > date) {
@@ -194,7 +200,7 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
               />
             </PopoverContent>
           </Popover>
-          {slide.dateRequired && !slide.defaultDate && 
+          {slide.dateRequired && !selectedDate && 
             <p className="text-xs text-red-500 mt-1">This field is required</p>
           }
         </div>
@@ -204,4 +210,3 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
       return null;
   }
 }
-
