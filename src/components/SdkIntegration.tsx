@@ -9,7 +9,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, Code } from "lucide-react";
+import { Check, Copy, Code, ExternalLink } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -53,6 +53,16 @@ struct ${appName.replace(/\s+/g, '')}App: App {
     }
 }`;
 
+  // Swift installation instructions
+  const swiftInstallation = `// Add FlowKit to your Package.swift dependencies
+dependencies: [
+    .package(url: "https://github.com/FlowKit/flowkit-swift.git", from: "1.0.0")
+]
+
+// Or add directly in Xcode:
+// File > Add Packages... > Search or enter package URL
+// https://github.com/FlowKit/flowkit-swift.git`;
+
   // React Native code sample with new SDK name
   const reactNativeCode = `import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -67,6 +77,16 @@ export default function App() {
     </FlowKitProvider>
   );
 }`;
+
+  // React Native installation instructions
+  const reactNativeInstallation = `// Install FlowKit using npm
+npm install react-flowkit
+
+// Or using yarn
+yarn add react-flowkit
+
+// For iOS, also run
+cd ios && pod install && cd ..`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -106,21 +126,48 @@ export default function App() {
               <TabsTrigger value="react-native">React Native</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="swift" className="mt-2">
-              <div className="relative">
-                <pre className="bg-black text-white p-4 rounded-md text-sm overflow-x-auto">
-                  <code>{swiftCode}</code>
-                </pre>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90"
-                  onClick={() => handleCopy(swiftCode)}
-                >
-                  <Copy className="h-3 w-3 mr-1" />
-                  Copy
-                </Button>
+            <TabsContent value="swift" className="mt-2 space-y-4">
+              {/* Swift Installation Instructions */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">1. Installation</h4>
+                <div className="relative">
+                  <pre className="bg-black text-white p-4 rounded-md text-sm overflow-x-auto">
+                    <code>{swiftInstallation}</code>
+                  </pre>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                    onClick={() => handleCopy(swiftInstallation)}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  If you encounter package resolution issues, make sure you have a stable internet connection and correct access rights.
+                </p>
               </div>
+
+              {/* Swift Usage Code */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">2. Implementation</h4>
+                <div className="relative">
+                  <pre className="bg-black text-white p-4 rounded-md text-sm overflow-x-auto">
+                    <code>{swiftCode}</code>
+                  </pre>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                    onClick={() => handleCopy(swiftCode)}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+
               <div className="mt-4 p-3 bg-muted rounded-md">
                 <h4 className="text-sm font-medium mb-2">How it works</h4>
                 <ol className="text-xs space-y-1 text-muted-foreground list-decimal pl-4">
@@ -132,21 +179,45 @@ export default function App() {
               </div>
             </TabsContent>
             
-            <TabsContent value="react-native" className="mt-2">
-              <div className="relative">
-                <pre className="bg-black text-white p-4 rounded-md text-sm overflow-x-auto">
-                  <code>{reactNativeCode}</code>
-                </pre>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90"
-                  onClick={() => handleCopy(reactNativeCode)}
-                >
-                  <Copy className="h-3 w-3 mr-1" />
-                  Copy
-                </Button>
+            <TabsContent value="react-native" className="mt-2 space-y-4">
+              {/* React Native Installation Instructions */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">1. Installation</h4>
+                <div className="relative">
+                  <pre className="bg-black text-white p-4 rounded-md text-sm overflow-x-auto">
+                    <code>{reactNativeInstallation}</code>
+                  </pre>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                    onClick={() => handleCopy(reactNativeInstallation)}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
               </div>
+
+              {/* React Native Usage Code */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">2. Implementation</h4>
+                <div className="relative">
+                  <pre className="bg-black text-white p-4 rounded-md text-sm overflow-x-auto">
+                    <code>{reactNativeCode}</code>
+                  </pre>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                    onClick={() => handleCopy(reactNativeCode)}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+
               <div className="mt-4 p-3 bg-muted rounded-md">
                 <h4 className="text-sm font-medium mb-2">How it works</h4>
                 <ol className="text-xs space-y-1 text-muted-foreground list-decimal pl-4">
