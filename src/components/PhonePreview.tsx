@@ -69,47 +69,53 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
     }
   }, [isAnimating, slide]);
 
+  const navigateToPrevSlide = () => {
+    const prevSlide = allSlides[currentIndex - 1];
+    if (prevSlide) {
+      setIsAnimating(false);
+      // Update the slide ID - This will trigger the parent component to update the selected slide
+      const event = new CustomEvent('slide-change', { 
+        detail: { slideId: prevSlide.id } 
+      });
+      window.dispatchEvent(event);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Progress bar at the top */}
-        <ProgressBar 
-          slide={mergedSlide} 
-          progress={progressPercentage} 
-          currentSlide={currentIndex + 1}
-          totalSlides={allSlides.length}
-        />
+        {/* Back button and progress indicator in header */}
+        {currentIndex > 0 && (
+          <div className="w-full border-b border-blue-400 px-4 py-2 flex justify-between items-center bg-white">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-1 text-sm text-blue-500 p-0 h-auto"
+              onClick={navigateToPrevSlide}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+            <div className="text-sm text-blue-500">
+              {currentIndex + 1} / {allSlides.length}
+            </div>
+          </div>
+        )}
+        
+        {/* Progress bar at the top - only show if not showing back button */}
+        {(currentIndex === 0 || !mergedSlide.showProgressBar) && (
+          <ProgressBar 
+            slide={mergedSlide} 
+            progress={progressPercentage} 
+            currentSlide={currentIndex + 1}
+            totalSlides={allSlides.length}
+          />
+        )}
         
         <div 
           className="flex flex-1 flex-col px-6 relative overflow-auto"
           style={getBackgroundStyle(mergedSlide)}
         >
-          {/* Back button - only show if not on the first slide */}
-          {currentIndex > 0 && (
-            <div className="absolute top-4 left-2 z-10">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="flex items-center gap-1 text-sm opacity-80 hover:opacity-100"
-                onClick={() => {
-                  // Navigate to previous slide
-                  const prevSlide = allSlides[currentIndex - 1];
-                  if (prevSlide) {
-                    setIsAnimating(false);
-                    // Update the slide ID - This will trigger the parent component to update the selected slide
-                    const event = new CustomEvent('slide-change', { 
-                      detail: { slideId: prevSlide.id } 
-                    });
-                    window.dispatchEvent(event);
-                  }
-                }}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-            </div>
-          )}
-
           {/* Content area with vertical and horizontal alignment */}
           <div className={cn(
             "flex flex-1 w-full justify-center", 

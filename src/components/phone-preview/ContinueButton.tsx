@@ -42,9 +42,10 @@ export function ContinueButton({ slide }: ContinueButtonProps) {
           slide.roundedCorners ? "rounded-lg" : "rounded-md",
           getButtonSize(),
           slide.buttonFullWidth && "w-full",
+          "bg-blue-500 hover:bg-blue-600" // Make button blue to match image
         )}
         style={{ 
-          backgroundColor: slide.buttonColor || undefined,
+          backgroundColor: slide.buttonColor || "#4299e1",
           color: slide.buttonTextColor || undefined
         }}
       >
