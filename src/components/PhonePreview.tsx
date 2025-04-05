@@ -9,7 +9,7 @@ import { SlideContent } from "./phone-preview/SlideContent";
 import { ContinueButton } from "./phone-preview/ContinueButton";
 import { ReplayButton } from "./phone-preview/ReplayButton";
 import { PreviewData } from "./phone-preview/PreviewData";
-import { Code, ArrowLeft } from "lucide-react";
+import { Code } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface PhonePreviewProps {
@@ -84,30 +84,17 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Progress bar with padding for better visibility */}
+        {/* Progress bar with back button functionality integrated */}
         <ProgressBar 
           slide={{
             ...mergedSlide,
             progressBarHeight: 'thin',
-            progressBarColor: '#4299e1', // Blue color as shown in second screenshot
+            progressBarColor: '#4299e1', // Blue color as shown in screenshot
           }} 
-          progress={progressPercentage} 
+          progress={progressPercentage}
+          showBackButton={currentIndex > 0}
+          onBack={navigateToPrevSlide}
         />
-        
-        {/* Back button navigation - only show if not on the first slide */}
-        {currentIndex > 0 && (
-          <div className="w-full bg-white px-4 py-3 border-b border-gray-100">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto"
-              onClick={navigateToPrevSlide}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-          </div>
-        )}
         
         <div 
           className="flex flex-1 flex-col px-6 relative overflow-auto"
