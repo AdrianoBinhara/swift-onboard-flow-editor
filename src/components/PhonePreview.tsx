@@ -129,11 +129,19 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
       
       {/* Controls below the phone frame */}
       <div className="mt-4 flex items-center gap-2">
-        <ReplayButton onReplay={handleReplayAnimation} />
+        <ReplayButton 
+          onReplay={handleReplayAnimation} 
+          buttonColor={mergedSlide.buttonColor} 
+          buttonTextColor={mergedSlide.buttonTextColor}
+          roundedCorners={mergedSlide.roundedCorners !== false}
+        />
         <Button 
           size="sm"
           variant="outline"
-          className="flex items-center gap-2"
+          className={cn(
+            "flex items-center gap-2",
+            mergedSlide.roundedCorners === false ? "rounded-none" : "rounded-md"
+          )}
           onClick={() => setPreviewDataOpen(true)}
         >
           <Code className="h-4 w-4" />

@@ -46,7 +46,7 @@ export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
     <div className={getButtonContainerClass()}>
       <Button 
         className={cn(
-          "rounded-md",
+          slide.roundedCorners === false ? "rounded-none" : "rounded-md",
           getButtonSize(),
           slide.buttonFullWidth && "w-full",
           "bg-blue-500 hover:bg-blue-600" // Blue color to match the screenshot

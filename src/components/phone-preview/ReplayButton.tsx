@@ -8,19 +8,24 @@ interface ReplayButtonProps {
   onReplay: () => void;
   buttonColor?: string;
   buttonTextColor?: string;
+  roundedCorners?: boolean;
 }
 
 export function ReplayButton({ 
   onReplay, 
   buttonColor, 
-  buttonTextColor 
+  buttonTextColor,
+  roundedCorners = true
 }: ReplayButtonProps) {
   return (
     <Button
       size="sm"
       variant="outline"
       onClick={onReplay}
-      className={cn("flex items-center gap-2")}
+      className={cn(
+        "flex items-center gap-2",
+        roundedCorners ? "rounded-md" : "rounded-none"
+      )}
       style={{ 
         backgroundColor: buttonColor,
         color: buttonTextColor,

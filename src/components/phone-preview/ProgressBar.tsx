@@ -51,6 +51,9 @@ export function ProgressBar({
   // Get background style from the slide
   const backgroundStyle = getBackgroundStyle(slide);
 
+  // Determine if rounded corners should be used
+  const useRoundedCorners = slide.roundedCorners !== false;
+
   return (
     <div 
       className="w-full pt-4 transition-all duration-300" 
@@ -64,7 +67,10 @@ export function ProgressBar({
               <Button
                 size="sm"
                 variant="ghost"
-                className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto hover:text-gray-700 transition-colors"
+                className={cn(
+                  "flex items-center gap-1 text-sm text-gray-500 p-0 h-auto hover:text-gray-700 transition-colors",
+                  useRoundedCorners ? "rounded-md" : "rounded-none"
+                )}
                 onClick={onBack}
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -86,7 +92,8 @@ export function ProgressBar({
           value={progressValue} 
           className={cn(
             getProgressBarHeight(),
-            "rounded-full overflow-hidden backdrop-blur-sm"
+            useRoundedCorners ? "rounded-full" : "rounded-none",
+            "overflow-hidden backdrop-blur-sm"
           )}
           style={{ 
             '--progress-bar-color': slide.progressBarColor || '#4299e1',
