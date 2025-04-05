@@ -15,7 +15,8 @@ import {
   Image as ImageIcon,
   Type,
   MoveHorizontal,
-  CornerDownRight
+  CornerDownRight,
+  X
 } from "lucide-react";
 import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,13 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
     "#4299e1", "#38b2ac", "#48bb78", "#ed8936",
     "#ed64a6", "#667eea", "#9f7aea", "#f56565"
   ];
+
+  const clearGradient = () => {
+    onSlideUpdate({
+      ...slide,
+      backgroundGradient: undefined
+    });
+  };
 
   return (
     <div className="p-4 space-y-6 overflow-y-auto max-h-full">
@@ -303,7 +311,19 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
             </div>
 
             <div className="mb-4">
-              <Label className="text-sm text-muted-foreground">Background Gradients</Label>
+              <div className="flex justify-between items-center mb-2">
+                <Label className="text-sm text-muted-foreground">Background Gradients</Label>
+                {slide.backgroundGradient && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={clearGradient} 
+                    className="h-6 px-2 text-xs"
+                  >
+                    <X className="h-3 w-3 mr-1" /> Clear gradient
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-2 gap-2 mt-2">
                 {presetGradients.map((gradient) => (
                   <div
@@ -321,12 +341,24 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
 
             <div className="mb-4">
               <Label className="text-sm text-muted-foreground">Background Image URL</Label>
-              <Input
-                className="mt-2"
-                placeholder="https://example.com/image.jpg"
-                value={slide.backgroundImage || ''}
-                onChange={(e) => handleFieldChange('backgroundImage', e.target.value)}
-              />
+              <div className="relative">
+                <Input
+                  className="mt-2 pr-8"
+                  placeholder="https://example.com/image.jpg"
+                  value={slide.backgroundImage || ''}
+                  onChange={(e) => handleFieldChange('backgroundImage', e.target.value)}
+                />
+                {slide.backgroundImage && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="absolute right-1 top-3 h-6 w-6 p-0" 
+                    onClick={() => handleFieldChange('backgroundImage', '')}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -341,7 +373,7 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
               <Label className="text-sm text-muted-foreground">Title Font Size</Label>
               <RadioGroup 
                 className="grid grid-cols-3 gap-2 mt-2" 
-                defaultValue={slide.titleFontSize || 'medium'}
+                value={slide.titleFontSize || 'medium'}
                 onValueChange={(value) => handleFieldChange('titleFontSize', value)}
               >
                 <div className="flex items-center space-x-2">
@@ -363,7 +395,7 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
               <Label className="text-sm text-muted-foreground">Description Font Size</Label>
               <RadioGroup 
                 className="grid grid-cols-3 gap-2 mt-2" 
-                defaultValue={slide.descriptionFontSize || 'medium'}
+                value={slide.descriptionFontSize || 'medium'}
                 onValueChange={(value) => handleFieldChange('descriptionFontSize', value)}
               >
                 <div className="flex items-center space-x-2">
@@ -449,6 +481,15 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
                     onClick={() => handleFieldChange('buttonColor', color)}
                   />
                 ))}
+                <div
+                  className={cn(
+                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
+                    !slide.buttonColor && "ring-2 ring-primary ring-offset-2"
+                  )}
+                  onClick={() => handleFieldChange('buttonColor', undefined)}
+                >
+                  <X className="h-3 w-3" />
+                </div>
               </div>
               <Input
                 className="mt-2"
@@ -475,6 +516,15 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
                   )}
                   onClick={() => handleFieldChange('buttonTextColor', '#000000')}
                 />
+                <div
+                  className={cn(
+                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
+                    !slide.buttonTextColor && "ring-2 ring-primary ring-offset-2"
+                  )}
+                  onClick={() => handleFieldChange('buttonTextColor', undefined)}
+                >
+                  <X className="h-3 w-3" />
+                </div>
               </div>
               <Input
                 className="mt-2"
