@@ -7,9 +7,10 @@ import { Slide } from "@/types/editor";
 
 interface ContinueButtonProps {
   slide: Slide;
+  onContinue?: () => void;
 }
 
-export function ContinueButton({ slide }: ContinueButtonProps) {
+export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
   const getButtonSize = () => {
     switch (slide.buttonSize) {
       case 'small': return 'h-8 px-3 text-xs';
@@ -38,6 +39,7 @@ export function ContinueButton({ slide }: ContinueButtonProps) {
           backgroundColor: slide.buttonColor || "#4299e1", // Blue color from the screenshot
           color: slide.buttonTextColor || "#ffffff"
         }}
+        onClick={onContinue}
       >
         Continue
         <ArrowRight className="ml-2 h-4 w-4" />

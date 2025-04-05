@@ -81,6 +81,18 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
     }
   };
 
+  const navigateToNextSlide = () => {
+    const nextSlide = allSlides[currentIndex + 1];
+    if (nextSlide) {
+      setIsAnimating(false);
+      // Update the slide ID - This will trigger the parent component to update the selected slide
+      const event = new CustomEvent('slide-change', { 
+        detail: { slideId: nextSlide.id } 
+      });
+      window.dispatchEvent(event);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
@@ -108,8 +120,8 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
             <SlideContent slide={slide} isAnimating={isAnimating} globalStyles={globalStyles} />
           </div>
           
-          {/* Button at the specified position */}
-          <ContinueButton slide={mergedSlide} />
+          {/* Button at the specified position with navigation functionality */}
+          <ContinueButton slide={mergedSlide} onContinue={navigateToNextSlide} />
         </div>
       </div>
       
