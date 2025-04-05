@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "../ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Slide } from "@/types/editor";
 
@@ -25,6 +25,22 @@ export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
     }
     return "flex justify-center pb-6 mt-auto"; // default to bottom
   };
+
+  const getButtonIcon = () => {
+    const iconType = slide.buttonIcon || 'arrow-right'; // Default to arrow-right if not specified
+    
+    switch (iconType) {
+      case 'chevron-right':
+        return <ChevronRight className="ml-2 h-4 w-4" />;
+      case 'chevron-down':
+        return <ChevronDown className="ml-2 h-4 w-4" />;
+      case 'none':
+        return null;
+      case 'arrow-right':
+      default:
+        return <ArrowRight className="ml-2 h-4 w-4" />;
+    }
+  };
   
   return (
     <div className={getButtonContainerClass()}>
@@ -42,7 +58,7 @@ export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
         onClick={onContinue}
       >
         Continue
-        <ArrowRight className="ml-2 h-4 w-4" />
+        {getButtonIcon()}
       </Button>
     </div>
   );
