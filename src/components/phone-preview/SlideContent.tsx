@@ -7,7 +7,7 @@ import {
   getAnimationClass, 
   getHorizontalAlignment 
 } from "./utils";
-import { ImageIcon, Calendar } from "lucide-react";
+import { ImageIcon, Calendar, Check } from "lucide-react";
 import { format } from "date-fns";
 import {
   Popover,
@@ -24,7 +24,7 @@ interface SlideContentProps {
 export function SlideContent({ slide, isAnimating }: SlideContentProps) {
   return (
     <div className={cn(
-      "flex flex-col max-w-[280px] w-full mx-auto", // Added w-full and mx-auto to center content
+      "flex flex-col max-w-[280px] w-full mx-auto", 
       getHorizontalAlignment(slide.horizontalAlignment),
       getAnimationClass(isAnimating, slide.animation)
     )}>
@@ -61,12 +61,14 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
 }
 
 function SlideTypeContent({ slide }: { slide: Slide }) {
-  // New state for controlling the calendar open/close state
+  // State for controlling the calendar open/close state
   const [calendarOpen, setCalendarOpen] = useState(false);
-  // New state to track the selected date locally
+  // State to track the selected date locally
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     slide.defaultDate ? new Date(slide.defaultDate) : undefined
   );
+  // New state for tracking the selected choice option
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
 
   switch (slide.type) {
     case 'image':
@@ -124,19 +126,35 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
             <button
               key={index}
               className={cn(
-                "py-2 px-4 border w-full text-left",
+                "py-2 px-4 border w-full text-left relative",
                 slide.roundedCorners ? "rounded-lg" : "",
-                "transition-colors hover:bg-black/5"
+                "transition-colors hover:bg-black/5",
+                selectedChoice === option && "border-2 bg-black/5"
               )}
               style={{ 
                 backgroundColor: slide.buttonColor || undefined,
                 color: slide.buttonTextColor || undefined,
-                borderColor: slide.buttonColor || 'hsl(var(--border))'
+                borderColor: selectedChoice === option 
+                  ? (slide.buttonTextColor || 'black')
+                  : (slide.buttonColor || 'hsl(var(--border))')
               }}
+              onClick={() => setSelectedChoice(option)}
             >
-              {option}
+              <div className="flex items-center justify-between">
+                <span>{option}</span>
+                {selectedChoice === option && (
+                  <Check className="h-4 w-4" />
+                )}
+              </div>
             </button>
           ))}
+          
+          {/* Display selected choice summary if available */}
+          {selectedChoice && (
+            <div className="mt-4 p-3 bg-muted rounded-md text-sm">
+              <p className="font-medium">Selected: {selectedChoice}</p>
+            </div>
+          )}
         </div>
       ) : null;
     
