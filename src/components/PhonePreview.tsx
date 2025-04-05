@@ -9,20 +9,26 @@ import { SlideContent } from "./phone-preview/SlideContent";
 import { ContinueButton } from "./phone-preview/ContinueButton";
 import { ReplayButton } from "./phone-preview/ReplayButton";
 import { PreviewData } from "./phone-preview/PreviewData";
-import { Code } from "lucide-react";
+import { SdkIntegration } from "./SdkIntegration";
+import { Code, Share2 } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface PhonePreviewProps {
   slide: Slide | null;
   allSlides?: Slide[]; 
   globalStyles?: GlobalStyles;
+  flowName?: string;
 }
 
-export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePreviewProps) {
+export function PhonePreview({ slide, allSlides = [], globalStyles, flowName = "My App" }: PhonePreviewProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
   const [previewDataOpen, setPreviewDataOpen] = useState(false);
+  const [sdkIntegrationOpen, setSdkIntegrationOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  // Generate a stable app ID based on the flow name
+  const appId = `${flowName.toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 10)}`;
 
   // If no slide is selected, show empty preview
   if (!slide) {
@@ -147,6 +153,20 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
           <Code className="h-4 w-4" />
           Preview Data
         </Button>
+        
+        {/* SDK Integration Button */}
+        <Button 
+          size="sm"
+          variant="default"
+          className={cn(
+            "flex items-center gap-2",
+            mergedSlide.roundedCorners === false ? "rounded-none" : "rounded-md"
+          )}
+          onClick={() => setSdkIntegrationOpen(true)}
+        >
+          <Share2 className="h-4 w-4" />
+          Integrate
+        </Button>
       </div>
 
       {/* Preview Data Dialog */}
@@ -154,6 +174,14 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
         open={previewDataOpen} 
         onOpenChange={setPreviewDataOpen} 
         slides={allSlides}
+      />
+      
+      {/* SDK Integration Dialog */}
+      <SdkIntegration
+        open={sdkIntegrationOpen}
+        onOpenChange={setSdkIntegrationOpen}
+        appId={appId}
+        appName={flowName}
       />
     </div>
   );

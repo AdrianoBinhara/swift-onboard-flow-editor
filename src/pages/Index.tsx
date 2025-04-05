@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { SlideList } from "@/components/SlideList";
@@ -48,7 +47,6 @@ const Index = () => {
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
 
-  // Add event listener to handle slide changes from the phone preview
   useEffect(() => {
     const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {
       setSelectedSlideId(event.detail.slideId);
@@ -74,12 +72,10 @@ const Index = () => {
       horizontalAlignment: "center",
     };
 
-    // Add type-specific default properties
     if (type === "date") {
       newSlide.title = "Select a Date";
       newSlide.description = "Please choose a date to continue";
       newSlide.datePlaceholder = "Select a date...";
-      // Add other date-specific properties with defaults
       newSlide.defaultDate = "";
       newSlide.dateRequired = false;
       newSlide.minDate = "";
@@ -178,6 +174,7 @@ const Index = () => {
             slide={selectedSlide} 
             allSlides={flow.slides} 
             globalStyles={flow.globalStyles}
+            flowName={flow.name}
           />
         </div>
       </div>
