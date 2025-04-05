@@ -36,6 +36,14 @@ export function SdkIntegration({ open, onOpenChange, appId, appName }: SdkIntegr
     }, 2000);
   };
 
+  // Swift Package Manager setup instructions
+  const swiftPackageSetup = `// In Xcode:
+// 1. Select File > Add Packages...
+// 2. Enter this URL in the search field:
+https://github.com/FlowKit/flowkit-swift.git
+// 3. Select "Up to Next Major Version" starting from "1.0.0"
+// 4. Click "Add Package"`;
+
   // Swift code sample with new SDK name
   const swiftCode = `import SwiftUI
 import FlowKit
@@ -82,13 +90,6 @@ extension View {
         modifier(FlowKitViewModifier())
     }
 }`;
-
-  // Swift installation instructions - simplified
-  const swiftInstallation = `// Add FlowKit to your Package.swift dependencies
-.package(url: "https://github.com/FlowKit/flowkit-swift.git", from: "1.0.0")
-
-// Or add in Xcode: File > Add Packages...
-// https://github.com/FlowKit/flowkit-swift.git`;
 
   // React Native code sample with new SDK name
   const reactNativeCode = `import React from 'react';
@@ -147,23 +148,23 @@ cd ios && pod install`;
             </TabsList>
             
             <TabsContent value="swift" className="space-y-4 mt-0">
-              {/* Swift Installation Instructions */}
+              {/* Swift Package Manager Installation */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium flex items-center mb-2">
                   <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">1</span>
-                  Installation
+                  Installation with Swift Package Manager
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "120px"}}>
-                    <code>{swiftInstallation}</code>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
+                    <code>{swiftPackageSetup}</code>
                   </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
                     className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
-                    onClick={() => handleCopy(swiftInstallation, "swiftInstallation")}
+                    onClick={() => handleCopy(swiftPackageSetup, "swiftPackageSetup")}
                   >
-                    {copied && copiedSection === "swiftInstallation" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
+                    {copied && copiedSection === "swiftPackageSetup" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
                     Copy
                   </Button>
                 </div>
@@ -176,7 +177,7 @@ cd ios && pod install`;
                   App Setup
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "180px"}}>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
                     <code>{swiftCode}</code>
                   </pre>
                   <Button 
@@ -198,7 +199,7 @@ cd ios && pod install`;
                   ContentView
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "180px"}}>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
                     <code>{swiftUIContentView}</code>
                   </pre>
                   <Button 
@@ -222,7 +223,7 @@ cd ios && pod install`;
                   Installation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "120px"}}>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
                     <code>{reactNativeInstallation}</code>
                   </pre>
                   <Button 
@@ -244,7 +245,7 @@ cd ios && pod install`;
                   Implementation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "180px"}}>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm overflow-x-auto font-mono" style={{maxHeight: "150px"}}>
                     <code>{reactNativeCode}</code>
                   </pre>
                   <Button 
