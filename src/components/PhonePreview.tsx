@@ -42,7 +42,7 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
       <ProgressBar slide={slide} />
       
       <div 
-        className="flex flex-1 flex-col px-6 relative"
+        className="flex flex-1 flex-col px-6 relative overflow-auto"
         style={getBackgroundStyle(slide)}
       >
         {/* Content area with vertical and horizontal alignment */}

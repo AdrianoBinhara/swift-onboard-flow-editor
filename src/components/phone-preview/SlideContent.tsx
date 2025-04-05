@@ -21,6 +21,9 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
       getHorizontalAlignment(slide.horizontalAlignment),
       getAnimationClass(isAnimating, slide.animation)
     )}>
+      {/* Render media content (image or video) at the top if present */}
+      <SlideTypeContent slide={slide} />
+      
       {slide.title && (
         <h2 
           className={cn(
@@ -44,8 +47,6 @@ export function SlideContent({ slide, isAnimating }: SlideContentProps) {
           {slide.description}
         </p>
       )}
-
-      <SlideTypeContent slide={slide} />
     </div>
   );
 }
@@ -54,33 +55,35 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
   switch (slide.type) {
     case 'image':
       return slide.imageUrl ? (
-        <img 
-          src={slide.imageUrl} 
-          alt={slide.title || "Slide image"}
-          className={cn(
-            "max-w-full mb-6 mx-auto",
-            slide.roundedCorners && "rounded-lg"
-          )}
-        />
+        <div className="mb-6 w-full">
+          <img 
+            src={slide.imageUrl} 
+            alt={slide.title || "Slide image"}
+            className={cn(
+              "max-w-full mx-auto object-contain",
+              slide.roundedCorners && "rounded-lg"
+            )}
+          />
+        </div>
       ) : null;
     
     case 'video':
       return slide.videoUrl ? (
         <div className={cn(
-          "mb-6",
+          "mb-6 w-full",
           slide.roundedCorners && "rounded-lg overflow-hidden"
         )}>
           <video 
             src={slide.videoUrl} 
             controls 
-            className="max-w-full"
+            className="max-w-full mx-auto"
           />
         </div>
       ) : null;
     
     case 'choice':
       return slide.options ? (
-        <div className="flex flex-col gap-2 mb-6">
+        <div className="flex flex-col gap-2 mb-6 w-full">
           {slide.options.map((option, index) => (
             <button
               key={index}
@@ -103,7 +106,7 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
     
     case 'input':
       return (
-        <div className="mb-6">
+        <div className="mb-6 w-full">
           <input
             type={slide.inputType || 'text'}
             placeholder={slide.inputPlaceholder || "Enter your response"}
