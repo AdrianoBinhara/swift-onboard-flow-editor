@@ -1,4 +1,3 @@
-
 export interface Slide {
   id: string;
   type: 'text' | 'image' | 'video' | 'choice' | 'input' | 'date';
@@ -23,6 +22,15 @@ export interface Slide {
   titleFontSize?: 'small' | 'medium' | 'large';
   descriptionFontSize?: 'small' | 'medium' | 'large';
   roundedCorners?: boolean;
+  // New button and progress bar customization
+  buttonPosition?: 'bottom' | 'below-content';
+  buttonIcon?: 'arrow-right' | 'chevron-right' | 'chevron-down' | 'none';
+  buttonSize?: 'small' | 'medium' | 'large';
+  buttonFullWidth?: boolean;
+  progressBarColor?: string;
+  progressBarHeight?: 'thin' | 'medium' | 'thick';
+  progressPercentage?: number;
+  showProgressBar?: boolean;
 }
 
 export interface OnboardingFlow {

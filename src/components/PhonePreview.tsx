@@ -39,7 +39,7 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
   return (
     <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
       {/* Progress bar at the top */}
-      <ProgressBar />
+      <ProgressBar slide={slide} />
       
       <div 
         className="flex flex-1 flex-col px-6 relative"
@@ -53,7 +53,7 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
           <SlideContent slide={slide} isAnimating={isAnimating} />
         </div>
         
-        {/* Button always at the bottom */}
+        {/* Button at the specified position */}
         <ContinueButton slide={slide} />
       </div>
 
