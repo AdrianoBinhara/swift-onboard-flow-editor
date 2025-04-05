@@ -1,5 +1,5 @@
 
-import { Plus, ArrowDown } from "lucide-react";
+import { Plus, ArrowDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { SlideCard } from "./SlideCard";
 import { Button } from "./ui/button";
 import { Slide } from "@/types/editor";
@@ -10,8 +10,6 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "./ui/pagination";
 
 interface SlideListProps {
@@ -43,6 +41,11 @@ export function SlideList({
   const indexOfFirstSlide = indexOfLastSlide - slidesPerPage;
   const currentSlides = slides.slice(indexOfFirstSlide, indexOfLastSlide);
 
+  // Function to handle page navigation
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
+
   return (
     <div className="flex flex-col items-center p-4">
       <div className="flex flex-wrap gap-4 justify-center mb-4">
@@ -69,38 +72,57 @@ export function SlideList({
         )}
       </div>
 
-      {/* Pagination controls with enhanced styling */}
+      {/* Improved pagination UI */}
       {totalPages > 1 && (
-        <Pagination className="mb-4">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-primary/10 transition-colors"}
-              />
-            </PaginationItem>
-            
-            {/* Page indicators */}
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  isActive={currentPage === index + 1}
-                  onClick={() => setCurrentPage(index + 1)}
-                  className={currentPage === index + 1 ? "bg-primary text-primary-foreground" : "hover:bg-primary/10"}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : "hover:bg-primary/10 transition-colors"}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <div className="flex items-center gap-2 mb-4">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => goToPage(1)}
+            disabled={currentPage === 1}
+          >
+            <ChevronsLeft className="h-4 w-4" />
+            <span className="sr-only">First page</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only">Previous page</span>
+          </Button>
+          
+          <div className="flex items-center text-sm font-medium">
+            <span className="text-primary">{currentPage}</span>
+            <span className="mx-1.5 text-muted-foreground">/</span>
+            <span className="text-muted-foreground">{totalPages}</span>
+          </div>
+          
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight className="h-4 w-4" />
+            <span className="sr-only">Next page</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => goToPage(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronsRight className="h-4 w-4" />
+            <span className="sr-only">Last page</span>
+          </Button>
+        </div>
       )}
 
       {/* Enhanced Add Slide button when the current page is full */}
@@ -123,8 +145,8 @@ export function SlideList({
         onSelectType={(type) => {
           onAddSlide(type);
           setIsDialogOpen(false);
-          // If adding a new slide would create a new page, navigate to it
-          if (slides.length % slidesPerPage === 0) {
+          // If adding a new slide would create a new page and we're on the last page, navigate to it
+          if ((slides.length % slidesPerPage === 0) && (currentPage === totalPages)) {
             setCurrentPage(totalPages + 1);
           }
         }}
