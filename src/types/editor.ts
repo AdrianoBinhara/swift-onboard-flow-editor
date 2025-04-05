@@ -11,6 +11,18 @@ export interface Slide {
   options?: string[];
   inputPlaceholder?: string;
   inputType?: 'text' | 'email' | 'number';
+  // New customization options
+  backgroundColor?: string;
+  backgroundImage?: string;
+  backgroundGradient?: string;
+  titleColor?: string;
+  descriptionColor?: string;
+  buttonColor?: string;
+  buttonTextColor?: string;
+  animation?: 'none' | 'fade' | 'slide-up' | 'slide-left' | 'zoom';
+  titleFontSize?: 'small' | 'medium' | 'large';
+  descriptionFontSize?: 'small' | 'medium' | 'large';
+  roundedCorners?: boolean;
 }
 
 export interface OnboardingFlow {
