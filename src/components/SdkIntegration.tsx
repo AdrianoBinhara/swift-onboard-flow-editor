@@ -45,6 +45,31 @@ https://github.com/FlowKit/flowkit-swift.git
 // 3. Select "Up to Next Major Version" starting from "1.0.0"
 // 4. Click "Add Package"`;
 
+  // Package.swift configuration
+  const packageSwift = `// swift-tools-version:5.5
+import PackageDescription
+
+let package = Package(
+    name: "FlowKit",
+    platforms: [
+        .iOS(.v14)
+    ],
+    products: [
+        .library(
+            name: "FlowKit",
+            targets: ["FlowKit"]),
+    ],
+    dependencies: [],
+    targets: [
+        .target(
+            name: "FlowKit",
+            dependencies: []),
+        .testTarget(
+            name: "FlowKitTests",
+            dependencies: ["FlowKit"]),
+    ]
+)`;
+
   // Swift code sample with new SDK name
   const swiftCode = `import SwiftUI
 import FlowKit
@@ -173,10 +198,34 @@ cd ios && pod install`;
                 </div>
               </div>
 
-              {/* Swift App Implementation */}
+              {/* Package.swift Configuration */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium flex items-center mb-2">
                   <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">2</span>
+                  Package.swift Configuration
+                </h4>
+                <div className="relative">
+                  <ScrollArea className="h-[120px] w-full rounded-md border">
+                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
+                      <code>{packageSwift}</code>
+                    </pre>
+                  </ScrollArea>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
+                    onClick={() => handleCopy(packageSwift, "packageSwift")}
+                  >
+                    {copied && copiedSection === "packageSwift" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
+                    Copy
+                  </Button>
+                </div>
+              </div>
+
+              {/* Swift App Implementation */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium flex items-center mb-2">
+                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">3</span>
                   App Setup
                 </h4>
                 <div className="relative">
@@ -200,7 +249,7 @@ cd ios && pod install`;
               {/* SwiftUI ContentView */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium flex items-center mb-2">
-                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">3</span>
+                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">4</span>
                   ContentView
                 </h4>
                 <div className="relative">
