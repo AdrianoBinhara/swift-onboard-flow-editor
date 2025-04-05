@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Slide, GlobalStyles } from "@/types/editor";
 import { cn } from "@/lib/utils";

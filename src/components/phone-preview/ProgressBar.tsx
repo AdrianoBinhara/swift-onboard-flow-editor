@@ -48,17 +48,19 @@ export function ProgressBar({
     <div className="w-full pt-4" style={backgroundStyle}>
       <div className="flex items-center px-4 pb-2">
         {/* Back button displayed at the left side, on the same line as progress bar */}
-        {showBackButton && (
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto mr-3"
-            onClick={onBack}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-        )}
+        <div className="w-16">
+          {showBackButton && (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto"
+              onClick={onBack}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          )}
+        </div>
         
         {/* Progress bar filling the remaining space */}
         <div className="flex-1">
