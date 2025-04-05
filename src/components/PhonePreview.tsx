@@ -15,11 +15,21 @@ interface PhonePreviewProps {
 
 export function PhonePreview({ slide }: PhonePreviewProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
 
   // If no slide is selected, show empty preview
   if (!slide) {
     return <EmptyPreview />;
   }
+
+  // Reset animation when slide changes
+  useEffect(() => {
+    if (slide.id !== slideId) {
+      setSlideId(slide.id);
+      setIsAnimating(false);
+      setTimeout(() => setIsAnimating(true), 10);
+    }
+  }, [slide, slideId]);
 
   const handleReplayAnimation = () => {
     setIsAnimating(false);

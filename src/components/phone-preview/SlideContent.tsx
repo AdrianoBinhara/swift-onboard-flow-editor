@@ -67,7 +67,7 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     slide.defaultDate ? new Date(slide.defaultDate) : undefined
   );
-  // New state for tracking the selected choice option
+  // State for tracking the selected choice option
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
 
   switch (slide.type) {
@@ -120,9 +120,14 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
       );
     
     case 'choice':
-      return slide.options ? (
+      // Ensure we have default options if none are provided
+      const displayOptions = slide.options && slide.options.length > 0 
+        ? slide.options 
+        : ["Option 1", "Option 2"];
+        
+      return (
         <div className="flex flex-col gap-2 mb-6 w-full">
-          {slide.options.map((option, index) => (
+          {displayOptions.map((option, index) => (
             <button
               key={index}
               className={cn(
@@ -156,7 +161,7 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
             </div>
           )}
         </div>
-      ) : null;
+      );
     
     case 'input':
       return (

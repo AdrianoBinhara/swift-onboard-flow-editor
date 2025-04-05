@@ -52,6 +52,10 @@ const Index = () => {
       newSlide.dateRequired = false;
       newSlide.minDate = "";
       newSlide.maxDate = "";
+    } else if (type === "choice") {
+      newSlide.title = "Make a Selection";
+      newSlide.description = "Please choose one of the following options";
+      newSlide.options = ["Option 1", "Option 2"];
     }
 
     setFlow((prev) => ({
