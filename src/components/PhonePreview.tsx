@@ -47,7 +47,7 @@ export function PhonePreview({ slide }: PhonePreviewProps) {
       >
         {/* Content area with vertical and horizontal alignment */}
         <div className={cn(
-          "flex flex-1 w-full justify-center", // Added justify-center to center content horizontally
+          "flex flex-1 w-full justify-center", 
           getVerticalAlignment(slide.verticalAlignment)
         )}>
           <SlideContent slide={slide} isAnimating={isAnimating} />
