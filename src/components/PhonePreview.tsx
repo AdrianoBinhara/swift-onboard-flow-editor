@@ -84,34 +84,32 @@ export function PhonePreview({ slide, allSlides = [], globalStyles }: PhonePrevi
   return (
     <div className="flex flex-col items-center">
       <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
-        {/* Navigation header with back button and progress indicator */}
-        <div className="w-full bg-white">
-          {/* Only show back button if not on the first slide */}
-          {currentIndex > 0 && (
-            <div className="flex items-center justify-between px-4 py-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="flex items-center gap-1 text-sm text-blue-500 p-0 h-auto"
-                onClick={navigateToPrevSlide}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-              <div className="text-sm text-blue-500">
-                {currentIndex + 1} / {allSlides.length}
-              </div>
-            </div>
-          )}
-          
-          {/* Progress bar below the back button */}
-          <ProgressBar 
-            slide={mergedSlide} 
-            progress={progressPercentage} 
-            currentSlide={currentIndex + 1}
-            totalSlides={allSlides.length}
-          />
-        </div>
+        {/* Progress bar at the very top - matches image */}
+        <ProgressBar 
+          slide={{
+            ...mergedSlide,
+            progressBarHeight: 'thin',
+            progressBarColor: mergedSlide.progressBarColor || '#ea384c', // Default to red color from image
+          }} 
+          progress={progressPercentage} 
+          currentSlide={currentIndex + 1}
+          totalSlides={allSlides.length}
+        />
+        
+        {/* Back button navigation - only show if not on the first slide */}
+        {currentIndex > 0 && (
+          <div className="w-full bg-white px-4 py-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto"
+              onClick={navigateToPrevSlide}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          </div>
+        )}
         
         <div 
           className="flex flex-1 flex-col px-6 relative overflow-auto"

@@ -25,7 +25,7 @@ export function ProgressBar({
     switch (slide.progressBarHeight) {
       case 'thin': return 'h-1';
       case 'thick': return 'h-2';
-      default: return 'h-1.5'; // medium is default
+      default: return 'h-1'; // Set default to thin to match the image
     }
   };
 
@@ -35,14 +35,14 @@ export function ProgressBar({
     : progress;
 
   return (
-    <div className="px-0 w-full">
+    <div className="w-full">
       <Progress 
         value={progressValue} 
         className={getProgressBarHeight()}
         style={{ 
-          backgroundColor: slide.progressBarColor ? `${slide.progressBarColor}40` : undefined,
-          '--progress-bar-color': slide.progressBarColor,
-          borderRadius: 0
+          backgroundColor: 'transparent', // Make background transparent
+          '--progress-bar-color': slide.progressBarColor || '#ea384c', // Default to red color from image
+          borderRadius: 0,
         } as React.CSSProperties}
       />
     </div>
