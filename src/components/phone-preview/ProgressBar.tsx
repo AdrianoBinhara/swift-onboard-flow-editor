@@ -41,32 +41,32 @@ export function ProgressBar({
     : progress;
 
   return (
-    <div className="w-full bg-white flex flex-col">
-      {/* Top area for progress bar */}
-      <div className="w-full pt-2 pb-1">
-        <Progress 
-          value={progressValue} 
-          className={getProgressBarHeight()}
-          style={{ 
-            '--progress-bar-color': slide.progressBarColor || '#4299e1', // Default to blue color from screenshot
-          } as React.CSSProperties}
-        />
-      </div>
-      
-      {/* Area for back button if needed */}
-      {showBackButton && (
-        <div className="px-4 py-2 border-b border-gray-100">
+    <div className="w-full bg-white">
+      <div className="flex items-center pt-2 pb-1 px-4">
+        {/* Back button displayed at the left side, on the same line as progress bar */}
+        {showBackButton && (
           <Button
             size="sm"
             variant="ghost"
-            className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto"
+            className="flex items-center gap-1 text-sm text-gray-500 p-0 h-auto mr-3"
             onClick={onBack}
           >
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
+        )}
+        
+        {/* Progress bar filling the remaining space */}
+        <div className="flex-1">
+          <Progress 
+            value={progressValue} 
+            className={getProgressBarHeight()}
+            style={{ 
+              '--progress-bar-color': slide.progressBarColor || '#4299e1', // Default to blue color from screenshot
+            } as React.CSSProperties}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 }
