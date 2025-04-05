@@ -8,7 +8,8 @@ import {
   getAnimationClass, 
   getHorizontalAlignment 
 } from "./utils";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Calendar } from "lucide-react";
+import { format } from "date-fns";
 
 interface SlideContentProps {
   slide: Slide;
@@ -138,6 +139,27 @@ function SlideTypeContent({ slide }: { slide: Slide }) {
               slide.roundedCorners ? "rounded-lg" : ""
             )}
           />
+        </div>
+      );
+    
+    case 'date':
+      return (
+        <div className="mb-6 w-full">
+          <div 
+            className={cn(
+              "relative w-full flex items-center border p-2 cursor-pointer",
+              slide.roundedCorners ? "rounded-lg" : "",
+              "transition-colors hover:bg-black/5"
+            )}
+          >
+            <Calendar className="mr-2 h-4 w-4 opacity-70" />
+            <span className={slide.defaultDate ? "" : "text-muted-foreground"}>
+              {slide.defaultDate ? format(new Date(slide.defaultDate), 'PPP') : (slide.datePlaceholder || "Select a date...")}
+            </span>
+          </div>
+          {slide.dateRequired && !slide.defaultDate && 
+            <p className="text-xs text-red-500 mt-1">This field is required</p>
+          }
         </div>
       );
     

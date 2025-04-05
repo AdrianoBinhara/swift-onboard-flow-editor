@@ -1,3 +1,4 @@
+
 export interface Slide {
   id: string;
   type: 'text' | 'image' | 'video' | 'choice' | 'input' | 'date';
@@ -10,6 +11,12 @@ export interface Slide {
   options?: string[];
   inputPlaceholder?: string;
   inputType?: 'text' | 'email' | 'number';
+  // Date picker specific properties
+  datePlaceholder?: string;
+  defaultDate?: string;
+  dateRequired?: boolean;
+  minDate?: string;
+  maxDate?: string;
   // New customization options
   backgroundColor?: string;
   backgroundImage?: string;

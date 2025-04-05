@@ -47,6 +47,11 @@ const Index = () => {
       newSlide.title = "Select a Date";
       newSlide.description = "Please choose a date to continue";
       newSlide.datePlaceholder = "Select a date...";
+      // Add other date-specific properties with defaults
+      newSlide.defaultDate = "";
+      newSlide.dateRequired = false;
+      newSlide.minDate = "";
+      newSlide.maxDate = "";
     }
 
     setFlow((prev) => ({
