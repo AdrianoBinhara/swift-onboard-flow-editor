@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 
 interface SdkIntegrationProps {
@@ -62,10 +61,10 @@ struct ${appName.replace(/\s+/g, '')}App: App {
             ContentView().withOnboarding()
         }
     }
-}`;
+}
 
-  // SwiftUI ContentView sample
-  const swiftUIContentView = `import SwiftUI
+// ContentView.swift
+import SwiftUI
 import FlowKit
 
 struct ContentView: View {
@@ -156,11 +155,9 @@ cd ios && pod install`;
                   Installation with Swift Package Manager
                 </h4>
                 <div className="relative">
-                  <ScrollArea className="h-[120px] w-full rounded-md border">
-                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
-                      <code>{swiftPackageSetup}</code>
-                    </pre>
-                  </ScrollArea>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                    <code>{swiftPackageSetup}</code>
+                  </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -177,14 +174,12 @@ cd ios && pod install`;
               <div className="space-y-2">
                 <h4 className="text-sm font-medium flex items-center mb-2">
                   <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">2</span>
-                  App Setup
+                  App Implementation
                 </h4>
                 <div className="relative">
-                  <ScrollArea className="h-[120px] w-full rounded-md border">
-                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
-                      <code>{swiftCode}</code>
-                    </pre>
-                  </ScrollArea>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap max-h-[400px] overflow-y-auto">
+                    <code>{swiftCode}</code>
+                  </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -192,30 +187,6 @@ cd ios && pod install`;
                     onClick={() => handleCopy(swiftCode, "swiftCode")}
                   >
                     {copied && copiedSection === "swiftCode" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
-                    Copy
-                  </Button>
-                </div>
-              </div>
-
-              {/* SwiftUI ContentView */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center mb-2">
-                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">3</span>
-                  ContentView
-                </h4>
-                <div className="relative">
-                  <ScrollArea className="h-[120px] w-full rounded-md border">
-                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
-                      <code>{swiftUIContentView}</code>
-                    </pre>
-                  </ScrollArea>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
-                    onClick={() => handleCopy(swiftUIContentView, "swiftUIContentView")}
-                  >
-                    {copied && copiedSection === "swiftUIContentView" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
                     Copy
                   </Button>
                 </div>
@@ -230,11 +201,9 @@ cd ios && pod install`;
                   Installation
                 </h4>
                 <div className="relative">
-                  <ScrollArea className="h-[100px] w-full rounded-md border">
-                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
-                      <code>{reactNativeInstallation}</code>
-                    </pre>
-                  </ScrollArea>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                    <code>{reactNativeInstallation}</code>
+                  </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
@@ -254,11 +223,9 @@ cd ios && pod install`;
                   Implementation
                 </h4>
                 <div className="relative">
-                  <ScrollArea className="h-[120px] w-full rounded-md border">
-                    <pre className="bg-black text-white p-3 rounded-md text-sm font-mono">
-                      <code>{reactNativeCode}</code>
-                    </pre>
-                  </ScrollArea>
+                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                    <code>{reactNativeCode}</code>
+                  </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
