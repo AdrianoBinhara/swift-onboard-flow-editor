@@ -5,6 +5,7 @@ import { Slide } from "@/types/editor";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 import { getBackgroundStyle } from "./utils";
+import { cn } from "@/lib/utils";
 
 interface ProgressBarProps {
   slide: Slide;
