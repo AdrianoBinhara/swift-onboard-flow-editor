@@ -1,4 +1,3 @@
-
 import { Slide } from "@/types/editor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -533,18 +532,186 @@ export function SlideEditor({ slide, onSlideUpdate }: SlideEditorProps) {
                 onChange={(e) => handleFieldChange('buttonTextColor', e.target.value)}
               />
             </div>
+
+            <div className="mb-4">
+              <Label className="text-sm text-muted-foreground">Button Position</Label>
+              <RadioGroup 
+                className="grid grid-cols-2 gap-2 mt-2" 
+                value={slide.buttonPosition || 'bottom'}
+                onValueChange={(value) => handleFieldChange('buttonPosition', value)}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="bottom" id="button-bottom" />
+                  <Label htmlFor="button-bottom">Bottom</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="below-content" id="button-below" />
+                  <Label htmlFor="button-below">Below Content</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="mb-4">
+              <Label className="text-sm text-muted-foreground">Button Icon</Label>
+              <RadioGroup 
+                className="grid grid-cols-4 gap-2 mt-2" 
+                value={slide.buttonIcon || 'chevron-right'}
+                onValueChange={(value) => handleFieldChange('buttonIcon', value)}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="arrow-right" id="icon-arrow" />
+                  <Label htmlFor="icon-arrow">Arrow</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="chevron-right" id="icon-chevron" />
+                  <Label htmlFor="icon-chevron">Chevron</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="chevron-down" id="icon-down" />
+                  <Label htmlFor="icon-down">Down</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="none" id="icon-none" />
+                  <Label htmlFor="icon-none">None</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="mb-4">
+              <Label className="text-sm text-muted-foreground">Button Size</Label>
+              <RadioGroup 
+                className="grid grid-cols-3 gap-2 mt-2" 
+                value={slide.buttonSize || 'medium'}
+                onValueChange={(value) => handleFieldChange('buttonSize', value)}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="small" id="button-small" />
+                  <Label htmlFor="button-small">Small</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="medium" id="button-medium" />
+                  <Label htmlFor="button-medium">Medium</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="large" id="button-large" />
+                  <Label htmlFor="button-large">Large</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="flex items-center justify-between mb-4">
+              <Label className="flex items-center space-x-2" htmlFor="full-width">
+                <span>Button Full Width</span>
+              </Label>
+              <Switch
+                id="full-width"
+                checked={slide.buttonFullWidth || false}
+                onCheckedChange={(checked) => handleFieldChange('buttonFullWidth', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label className="flex items-center space-x-2" htmlFor="rounded-corners">
+                <CornerDownRight className="w-4 h-4" />
+                <span>Rounded Corners</span>
+              </Label>
+              <Switch
+                id="rounded-corners"
+                checked={slide.roundedCorners || false}
+                onCheckedChange={(checked) => handleFieldChange('roundedCorners', checked)}
+              />
+            </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label className="flex items-center space-x-2" htmlFor="rounded-corners">
-              <CornerDownRight className="w-4 h-4" />
-              <span>Rounded Corners</span>
+          <Separator />
+
+          <div>
+            <Label className="mb-2 block flex items-center">
+              <MoveHorizontal className="w-4 h-4 mr-2" /> Progress Bar
             </Label>
-            <Switch
-              id="rounded-corners"
-              checked={slide.roundedCorners || false}
-              onCheckedChange={(checked) => handleFieldChange('roundedCorners', checked)}
-            />
+            
+            <div className="mb-4">
+              <Label className="text-sm text-muted-foreground">Progress Bar Color</Label>
+              <div className="grid grid-cols-8 gap-2 mt-2">
+                {presetButtonColors.map((color) => (
+                  <div
+                    key={color}
+                    className={cn(
+                      "w-6 h-6 rounded-full cursor-pointer border border-gray-200",
+                      slide.progressBarColor === color && "ring-2 ring-primary ring-offset-2"
+                    )}
+                    style={{ backgroundColor: color }}
+                    onClick={() => handleFieldChange('progressBarColor', color)}
+                  />
+                ))}
+                <div
+                  className={cn(
+                    "w-6 h-6 rounded-full cursor-pointer border border-gray-200 flex items-center justify-center",
+                    !slide.progressBarColor && "ring-2 ring-primary ring-offset-2"
+                  )}
+                  onClick={() => handleFieldChange('progressBarColor', undefined)}
+                >
+                  <X className="h-3 w-3" />
+                </div>
+              </div>
+              <Input
+                className="mt-2"
+                placeholder="#0070f3 or rgb(0,112,243)"
+                value={slide.progressBarColor || ''}
+                onChange={(e) => handleFieldChange('progressBarColor', e.target.value)}
+              />
+            </div>
+
+            <div className="mb-4">
+              <Label className="text-sm text-muted-foreground">Progress Bar Height</Label>
+              <RadioGroup 
+                className="grid grid-cols-3 gap-2 mt-2" 
+                value={slide.progressBarHeight || 'medium'}
+                onValueChange={(value) => handleFieldChange('progressBarHeight', value)}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="thin" id="progress-thin" />
+                  <Label htmlFor="progress-thin">Thin</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="medium" id="progress-medium" />
+                  <Label htmlFor="progress-medium">Medium</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="thick" id="progress-thick" />
+                  <Label htmlFor="progress-thick">Thick</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="mb-4">
+              <Label className="text-sm text-muted-foreground">Progress Percentage</Label>
+              <Input
+                className="mt-2"
+                type="number"
+                min={0}
+                max={100}
+                placeholder="60"
+                value={slide.progressPercentage?.toString() || ''}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (!isNaN(value)) {
+                    handleFieldChange('progressPercentage', value);
+                  }
+                }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between mb-4">
+              <Label className="flex items-center space-x-2" htmlFor="show-progress">
+                <span>Show Progress Bar</span>
+              </Label>
+              <Switch
+                id="show-progress"
+                checked={slide.showProgressBar !== false}
+                onCheckedChange={(checked) => handleFieldChange('showProgressBar', checked)}
+              />
+            </div>
           </div>
         </TabsContent>
 
