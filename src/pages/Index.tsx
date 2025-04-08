@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { SlideList } from "@/components/SlideList";
 import { SlideEditor } from "@/components/SlideEditor";
@@ -59,12 +60,24 @@ const Index = () => {
   const [editorTab, setEditorTab] = useState<"slide" | "global">("slide");
   const [sdkIntegrationOpen, setSdkIntegrationOpen] = useState(false);
   const [appId, setAppId] = useState<string>('');
+  
+  const { appId: urlAppId } = useParams();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  
+  const isPreviewMode = urlParams.has('preview');
+  const isFrameOnlyMode = urlParams.has('frame') || location.pathname === '/frame' || urlAppId !== undefined;
+  const isSdk = urlParams.get('sdk') === 'ios';
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
 
   useEffect(() => {
-    setAppId(generateStableAppId(flow.name));
-  }, []);
+    if (urlAppId) {
+      setAppId(urlAppId);
+    } else {
+      setAppId(generateStableAppId(flow.name));
+    }
+  }, [urlAppId, flow.name]);
 
   useEffect(() => {
     const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {
@@ -148,12 +161,6 @@ const Index = () => {
   const handleOpenSdkIntegration = () => {
     setSdkIntegrationOpen(true);
   };
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const isPreviewMode = urlParams.has('preview');
-  const isFrameOnlyMode = urlParams.has('frame') || window.location.pathname === '/frame';
-  const urlAppId = urlParams.get('appId');
-  const isSdk = urlParams.get('sdk') === 'ios';
   
   if (isFrameOnlyMode || isPreviewMode) {
     return (
@@ -175,9 +182,9 @@ const Index = () => {
         onFlowNameChange={handleFlowNameChange} 
         onPublish={handleOpenSdkIntegration} 
         onCodeClick={() => {
-          const frameUrl = `${window.location.origin}/frame?appId=${appId}`;
+          const frameUrl = `${window.location.origin}/${appId}`;
           navigator.clipboard.writeText(frameUrl);
-          toast.success("Frame URL copied to clipboard", {
+          toast.success("Direct URL copied to clipboard", {
             description: "Use this URL in your app to show only the onboarding flow."
           });
         }}

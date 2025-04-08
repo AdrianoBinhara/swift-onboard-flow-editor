@@ -15,6 +15,9 @@ const NotFound = () => {
     );
   }, [location]);
 
+  // Check if the URL looks like an app ID was attempted
+  const isLikelyAppIdAttempt = /^\/[a-z0-9-]+$/.test(location.pathname);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center p-8 bg-white rounded-lg shadow-md max-w-md">
@@ -23,6 +26,21 @@ const NotFound = () => {
         <p className="text-gray-600 mb-6">
           The requested URL <span className="font-mono bg-gray-100 px-2 py-1 rounded">{location.pathname}</span> was not found.
         </p>
+        
+        {isLikelyAppIdAttempt && (
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-6">
+            <p className="text-amber-800 text-sm">
+              It looks like you're trying to access an onboarding flow with an app ID. 
+              Please make sure that:
+            </p>
+            <ul className="text-amber-700 text-sm list-disc list-inside mt-2">
+              <li>The app ID is correct</li>
+              <li>The onboarding flow has been created</li>
+              <li>You're using the latest version of the FlowKit SDK</li>
+            </ul>
+          </div>
+        )}
+        
         <p className="text-sm text-gray-500 mb-6">
           If you're using the FlowKit SDK, please check that you're using the correct app ID and that the URL is properly formatted.
         </p>

@@ -1,6 +1,3 @@
-
-// Only updating the relevant parts of the SdkIntegration component
-
 import React, { useState } from "react";
 import { 
   Dialog, 
@@ -26,8 +23,8 @@ export function SdkIntegration({ open, onOpenChange, appId, appName }: SdkIntegr
   const [copied, setCopied] = useState(false);
   const [copiedSection, setCopiedSection] = useState("");
 
-  // Get frame URL for embedding
-  const frameUrl = `${window.location.origin}/frame?appId=${appId}`;
+  // Get direct URL for embedding
+  const directUrl = `${window.location.origin}/${appId}`;
 
   const handleCopy = (text: string, section: string) => {
     navigator.clipboard.writeText(text);
@@ -49,7 +46,7 @@ https://github.com/FlowKit/flowkit-swift.git
 // 3. Select "Up to Next Major Version" starting from "1.0.0"
 // 4. Click "Add Package"`;
 
-  // Swift code sample with new SDK name
+  // Swift code sample with updated URL format
   const swiftCode = `import SwiftUI
 import FlowKit
 
@@ -94,7 +91,7 @@ struct ContentView: View {
     }
 }`;
 
-  // React Native code sample with new SDK name
+  // React Native code sample with updated URL format
   const reactNativeCode = `import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { FlowKitProvider, useFlowKit } from 'react-flowkit';
@@ -171,18 +168,18 @@ cd ios && pod install`;
             </div>
           </div>
           
-          {/* Frame URL Section */}
+          {/* Direct URL Section */}
           <div className="bg-muted/30 p-3 rounded-lg border">
-            <h3 className="text-sm font-medium mb-1">Onboarding Frame URL</h3>
+            <h3 className="text-sm font-medium mb-1">Direct Onboarding URL</h3>
             <div className="flex space-x-2">
-              <code className="flex-1 bg-muted p-2 rounded-md text-sm overflow-hidden font-mono text-xs">{frameUrl}</code>
+              <code className="flex-1 bg-muted p-2 rounded-md text-sm overflow-hidden font-mono text-xs">{directUrl}</code>
               <Button 
                 size="sm" 
                 variant="outline" 
-                onClick={() => handleCopy(frameUrl, "frameUrl")}
+                onClick={() => handleCopy(directUrl, "directUrl")}
                 className="shrink-0"
               >
-                {copied && copiedSection === "frameUrl" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied && copiedSection === "directUrl" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 <span className="sr-only">Copy</span>
               </Button>
             </div>

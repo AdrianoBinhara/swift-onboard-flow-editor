@@ -1,4 +1,3 @@
-
 import UIKit
 import WebKit
 
@@ -47,7 +46,7 @@ internal class OnboardingViewController: UIViewController {
         
         // Adicionar botão de fechar
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("Fechar", for: .normal)
+        closeButton.setTitle("Close", for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -91,13 +90,13 @@ internal class OnboardingViewController: UIViewController {
         let errorMessage = error != nil ? "\(message): \(error!.localizedDescription)" : message
         
         let alert = UIAlertController(
-            title: "Erro",
+            title: "Error",
             message: errorMessage,
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "Tentar novamente",
+            title: "Try Again",
             style: .default,
             handler: { [weak self] _ in
                 self?.loadOnboardingFlow()
@@ -105,7 +104,7 @@ internal class OnboardingViewController: UIViewController {
         ))
         
         alert.addAction(UIAlertAction(
-            title: "Cancelar",
+            title: "Cancel",
             style: .cancel,
             handler: { [weak self] _ in
                 self?.dismiss(animated: true)
@@ -158,23 +157,23 @@ extension OnboardingViewController: WKNavigationDelegate {
             let errorMessage: String
             switch nsError.code {
             case NSURLErrorNotConnectedToInternet:
-                errorMessage = "Sem conexão com a internet"
+                errorMessage = "No internet connection"
             case NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost:
-                errorMessage = "Não foi possível conectar ao servidor"
+                errorMessage = "Could not connect to server"
             case NSURLErrorTimedOut:
-                errorMessage = "Tempo de conexão esgotado"
+                errorMessage = "Connection timed out"
             default:
-                errorMessage = "Falha ao carregar o onboarding"
+                errorMessage = "Failed to load onboarding"
             }
             showError(message: errorMessage, error: error)
         } else {
-            showError(message: "Falha ao carregar o onboarding", error: error)
+            showError(message: "Failed to load onboarding", error: error)
         }
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         loadingIndicator.stopAnimating()
-        showError(message: "Falha ao carregar o onboarding", error: error)
+        showError(message: "Failed to load onboarding", error: error)
     }
 }
 

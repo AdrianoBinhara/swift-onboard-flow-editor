@@ -70,8 +70,7 @@ public class FlowKit {
             // return htmlURL
         }
         
-        // Use remote URL from hosted service
-        // Make sure to use /frame route which is configured to display only the onboarding flow
-        return URL(string: "\(baseUrl)/frame?appId=\(appId)&sdk=ios")
+        // Use remote URL from hosted service with direct app ID path
+        return URL(string: "\(baseUrl)/\(appId)?sdk=ios")
     }
 }
