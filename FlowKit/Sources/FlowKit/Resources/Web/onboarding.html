@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Onboarding Flow</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .slide {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            max-width: 80%;
+        }
+        
+        .button-container {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .button:hover {
+            background-color: #3182ce;
+        }
+        
+        .progress-container {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+        }
+        
+        .dot.active {
+            background-color: #4299e1;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 80%;
+            max-width: 300px;
+        }
+        
+        .option {
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #edf2f7;
+        }
+        
+        .option.selected {
+            border-color: #4299e1;
+            background-color: #ebf8ff;
+        }
+        
+        .date-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="onboarding-container">
+        <!-- Content will be dynamically inserted here -->
+        <div class="slide">
+            <div class="title">Loading your onboarding experience...</div>
+        </div>
+    </div>
+
+    <script>
+        // This script will handle loading and displaying the onboarding flow
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the app ID from the URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const appId = urlParams.get('appId');
+            
+            if (!appId) {
+                showError('No app ID provided');
+                return;
+            }
+            
+            // Fetch the onboarding flow data
+            fetchOnboardingFlow(appId);
+        });
+        
+        // Function to fetch the onboarding flow data
+        function fetchOnboardingFlow(appId) {
+            // In a real implementation, this would make an API call to your backend
+            // For now, we'll use a mock flow
+            const mockFlow = {
+                id: appId,
+                name: 'Sample Onboarding Flow',
+                slides: [
+                    {
+                        id: 'slide-1',
+                        type: 'text',
+                        title: 'Welcome to the App',
+                        description: 'This is the first step in your onboarding journey',
+                        verticalAlignment: 'center',
+                        horizontalAlignment: 'center'
+                    },
+                    {
+                        id: 'slide-2',
+                        type: 'text',
+                        title: 'Discover Features',
+                        description: 'Learn about all the amazing features our app offers',
+                        verticalAlignment: 'center',
+                        horizontalAlignment: 'center'
+                    },
+                    {
+                        id: 'slide-3',
+                        type: 'choice',
+                        title: 'Choose Your Path',
+                        description: 'Select what interests you the most',
+                        options: ['Productivity', 'Creativity', 'Learning'],
+                        verticalAlignment: 'center',
+                        horizontalAlignment: 'center'
+                    }
+                ],
+                globalStyles: {
+                    buttonColor: '#4299e1',
+                    buttonTextColor: '#ffffff',
+                    buttonPosition: 'bottom',
+                    buttonSize: 'medium',
+                    buttonIcon: 'arrow-right',
+                    showProgressBar: true,
+                    progressBarColor: '#4299e1',
+                    progressBarHeight: 'medium',
+                    animation: 'fade',
+                    titleFontSize: 'medium',
+                    descriptionFontSize: 'medium'
+                }
+            };
+            
+            // Render the onboarding flow
+            renderOnboardingFlow(mockFlow);
+        }
+        
+        // Current slide index
+        let currentSlideIndex = 0;
+        let onboardingFlow = null;
+        
+        // Function to render the onboarding flow
+        function renderOnboardingFlow(flow) {
+            onboardingFlow = flow;
+            const container = document.getElementById('onboarding-container');
+            
+            // Clear the container
+            container.innerHTML = '';
+            
+            // Render the first slide
+            renderSlide(currentSlideIndex);
+            
+            // Apply global styles
+            applyGlobalStyles(flow.globalStyles);
+        }
+        
+        // Function to render a slide
+        function renderSlide(index) {
+            if (!onboardingFlow || !onboardingFlow.slides[index]) {
+                return;
+            }
+            
+            const slide = onboardingFlow.slides[index];
+            const container = document.getElementById('onboarding-container');
+            
+            // Create slide element
+            const slideElement = document.createElement('div');
+            slideElement.className = 'slide';
+            slideElement.id = slide.id;
+            
+            // Add slide content based on type
+            if (slide.type === 'text') {
+                renderTextSlide(slideElement, slide);
+            } else if (slide.type === 'choice') {
+                renderChoiceSlide(slideElement, slide);
+            } else if (slide.type === 'date') {
+                renderDateSlide(slideElement, slide);
+            }
+            
+            // Clear container and add the new slide
+            container.innerHTML = '';
+            container.appendChild(slideElement);
+            
+            // Add progress indicator
+            if (onboardingFlow.globalStyles.showProgressBar) {
+                renderProgressIndicator();
+            }
+            
+            // Add navigation buttons
+            renderNavigationButtons();
+        }
+        
+        // Function to render a text slide
+        function renderTextSlide(slideElement, slide) {
+            // Add title
+            if (slide.title) {
+                const titleElement = document.createElement('div');
+                titleElement.className = 'title';
+                titleElement.textContent = slide.title;
+                slideElement.appendChild(titleElement);
+            }
+            
+            // Add description
+            if (slide.description) {
+                const descriptionElement = document.createElement('div');
+                descriptionElement.className = 'description';
+                descriptionElement.textContent = slide.description;
+                slideElement.appendChild(descriptionElement);
+            }
+        }
+        
+        // Function to render a choice slide
+        function renderChoiceSlide(slideElement, slide) {
+            // Add title
+            if (slide.title) {
+                const titleElement = document.createElement('div');
+                titleElement.className = 'title';
+                titleElement.textContent = slide.title;
+                slideElement.appendChild(titleElement);
+            }
+            
+            // Add description
+            if (slide.description) {
+                const descriptionElement = document.createElement('div');
+                descriptionElement.className = 'description';
+                descriptionElement.textContent = slide.description;
+                slideElement.appendChild(descriptionElement);
+            }
+            
+            // Add options
+            if (slide.options && slide.options.length > 0) {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                
+                slide.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.textContent = option;
+                    optionElement.dataset.index = index;
+                    
+                    optionElement.addEventListener('click', function() {
+                        // Remove selected class from all options
+                        document.querySelectorAll('.option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to this option
+                        this.classList.add('selected');
+                    });
+                    
+                    optionsContainer.appendChild(optionElement);
+                });
+                
+                slideElement.appendChild(optionsContainer);
+            }
+        }
+        
+        // Function to render a date slide
+        function renderDateSlide(slideElement, slide) {
+            // Add title
+            if (slide.title) {
+                const titleElement = document.createElement('div');
+                titleElement.className = 'title';
+                titleElement.textContent = slide.title;
+                slideElement.appendChild(titleElement);
+            }
+            
+            // Add description
+            if (slide.description) {
+                const descriptionElement = document.createElement('div');
+                descriptionElement.className = 'description';
+                descriptionElement.textContent = slide.description;
+                slideElement.appendChild(descriptionElement);
+            }
+            
+            // Add date input
+            const dateInput = document.createElement('input');
+            dateInput.type = 'date';
+            dateInput.className = 'date-input';
+            dateInput.placeholder = slide.datePlaceholder || 'Select a date...';
+            
+            if (slide.defaultDate) {
+                dateInput.value = slide.defaultDate;
+            }
+            
+            if (slide.dateRequired) {
+                dateInput.required = true;
+            }
+            
+            if (slide.minDate) {
+                dateInput.min = slide.minDate;
+            }
+            
+            if (slide.maxDate) {
+                dateInput.max = slide.maxDate;
+            }
+            
+            slideElement.appendChild(dateInput);
+        }
+        
+        // Function to render progress indicator
+        function renderProgressIndicator() {
+            const container = document.getElementById('onboarding-container');
+            
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            
+            const progressDots = document.createElement('div');
+            progressDots.className = 'progress-dots';
+            
+            for (let i = 0; i < onboardingFlow.slides.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i === currentSlideIndex) {
+                    dot.classList.add('active');
+                }
+                progressDots.appendChild(dot);
+            }
+            
+            progressContainer.appendChild(progressDots);
+            container.appendChild(progressContainer);
+        }
+        
+        // Function to render navigation buttons
+        function renderNavigationButtons() {
+            const container = document.getElementById('onboarding-container');
+            
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+            
+            // Only show back button if not on the first slide
+            if (currentSlideIndex > 0) {
+                const backButton = document.createElement('button');
+                backButton.className = 'button';
+                backButton.style.marginRight = '10px';
+                backButton.style.backgroundColor = '#e2e8f0';
+                backButton.style.color = '#4a5568';
+                backButton.textContent = 'Back';
+                
+                backButton.addEventListener('click', function() {
+                    navigateToPreviousSlide();
+                });
+                
+                buttonContainer.appendChild(backButton);
+            }
+            
+            // Next/Finish button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'button';
+            
+            if (currentSlideIndex === onboardingFlow.slides.length - 1) {
+                nextButton.textContent = 'Finish';
+                
+                nextButton.addEventListener('click', function() {
+                    completeOnboarding();
+                });
+            } else {
+                nextButton.textContent = 'Next';
+                
+                nextButton.addEventListener('click', function() {
+                    navigateToNextSlide();
+                });
+            }
+            
+            buttonContainer.appendChild(nextButton);
+            container.appendChild(buttonContainer);
+        }
+        
+        // Function to navigate to the next slide
+        function navigateToNextSlide() {
+            if (currentSlideIndex < onboardingFlow.slides.length - 1) {
+                currentSlideIndex++;
+                renderSlide(currentSlideIndex);
+            }
+        }
+        
+        // Function to navigate to the previous slide
+        function navigateToPreviousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                renderSlide(currentSlideIndex);
+            }
+        }
+        
+        // Function to complete the onboarding flow
+        function completeOnboarding() {
+            // Send message to native code
+            sendMessageToNative('complete');
+        }
+        
+        // Function to apply global styles
+        function applyGlobalStyles(styles) {
+            // Apply button color
+            document.documentElement.style.setProperty('--button-color', styles.buttonColor);
+            
+            // Apply button text color
+            document.documentElement.style.setProperty('--button-text-color', styles.buttonTextColor);
+            
+            // Apply progress bar color
+            document.documentElement.style.setProperty('--progress-bar-color', styles.progressBarColor);
+            
+            // Apply title font size
+            let titleSize = '24px';
+            if (styles.titleFontSize === 'small') {
+                titleSize = '20px';
+            } else if (styles.titleFontSize === 'large') {
+                titleSize = '28px';
+            }
+            document.documentElement.style.setProperty('--title-font-size', titleSize);
+            
+            // Apply description font size
+            let descSize = '16px';
+            if (styles.descriptionFontSize === 'small') {
+                descSize = '14px';
+            } else if (styles.descriptionFontSize === 'large') {
+                descSize = '18px';
+            }
+            document.documentElement.style.setProperty('--description-font-size', descSize);
+        }
+        
+        // Function to send a message to native code
+        function sendMessageToNative(action, data = {}) {
+            const message = {
+                action: action,
+                ...data
+            };
+            
+            // Check if we're running in a WebView with a message handler
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.flowKitHandler) {
+                window.webkit.messageHandlers.flowKitHandler.postMessage(message);
+            } else {
+                console.log('Message to native:', message);
+            }
+        }
+        
+        // Function to show an error
+        function showError(message) {
+            const container = document.getElementById('onboarding-container');
+            container.innerHTML = `
+                <div class="slide">
+                    <div class="title">Error</div>
+                    <div class="description">${message}</div>
+                    <button class="button" onclick="sendMessageToNative('close')">Close</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
