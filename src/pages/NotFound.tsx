@@ -34,10 +34,13 @@ const NotFound = () => {
               Please make sure that:
             </p>
             <ul className="text-amber-700 text-sm list-disc list-inside mt-2">
-              <li>The app ID is correct</li>
-              <li>The onboarding flow has been created</li>
+              <li>The app ID is correct (check for typos)</li>
+              <li>The onboarding flow has been created and published</li>
               <li>You're using the latest version of the FlowKit SDK</li>
             </ul>
+            <p className="text-amber-800 text-sm mt-2">
+              App IDs should look like: <code>my-onboarding-flow-y7opwx03</code>
+            </p>
           </div>
         )}
         

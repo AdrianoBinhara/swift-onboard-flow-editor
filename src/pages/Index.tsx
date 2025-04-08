@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -65,19 +66,32 @@ const Index = () => {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   
-  const isPreviewMode = urlParams.has('preview');
-  const isFrameOnlyMode = urlParams.has('frame') || location.pathname === '/frame' || urlAppId !== undefined;
+  // Parse URL parameters to determine the mode
+  const isFrameParam = urlParams.has('frame');
   const isSdk = urlParams.get('sdk') === 'ios';
+  
+  // Calculate display mode based on URL and parameters
+  const isFrameOnlyMode = urlAppId !== undefined || location.pathname === '/frame' || isFrameParam;
+  const isPreviewMode = urlParams.has('preview');
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
 
   useEffect(() => {
+    // Log the current path and parameters to debug routing issues
+    console.log("Current path:", location.pathname);
+    console.log("URL parameters:", Object.fromEntries(urlParams.entries()));
+    console.log("URL appId:", urlAppId);
+    console.log("Is frame mode:", isFrameOnlyMode);
+    
     if (urlAppId) {
+      console.log("Setting app ID from URL:", urlAppId);
       setAppId(urlAppId);
     } else {
-      setAppId(generateStableAppId(flow.name));
+      const generatedId = generateStableAppId(flow.name);
+      console.log("Setting generated app ID:", generatedId);
+      setAppId(generatedId);
     }
-  }, [urlAppId, flow.name]);
+  }, [urlAppId, flow.name, location.pathname, urlParams]);
 
   useEffect(() => {
     const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {
@@ -163,6 +177,7 @@ const Index = () => {
   };
   
   if (isFrameOnlyMode || isPreviewMode) {
+    console.log("Rendering frame-only or preview mode");
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
         <PhonePreview 

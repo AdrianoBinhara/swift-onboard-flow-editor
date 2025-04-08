@@ -1,3 +1,4 @@
+
 import UIKit
 import WebKit
 
@@ -36,7 +37,7 @@ internal class OnboardingViewController: UIViewController {
         contentController.add(self, name: "flowKitHandler")
         configuration.userContentController = contentController
         
-        // Configurações adicionais para melhorar a experiência
+        // Additional configurations to improve the experience
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         
@@ -44,7 +45,7 @@ internal class OnboardingViewController: UIViewController {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         
-        // Adicionar botão de fechar
+        // Add close button
         let closeButton = UIButton(type: .system)
         closeButton.setTitle("Close", for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
@@ -77,6 +78,7 @@ internal class OnboardingViewController: UIViewController {
             return
         }
         
+        print("FlowKit: Loading onboarding from URL: \(url.absoluteString)")
         let request = URLRequest(url: url)
         webView.load(request)
     }
@@ -120,20 +122,20 @@ extension OnboardingViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         loadingIndicator.stopAnimating()
         
-        // Injetar script para comunicação entre o WebView e o app nativo
+        // Inject script for communication between WebView and native app
         let script = """
         window.addEventListener('message', function(event) {
             window.webkit.messageHandlers.flowKitHandler.postMessage(event.data);
         });
         
-        // Informar ao site que está rodando dentro do SDK iOS
+        // Inform the site it's running inside the iOS SDK
         if (window.postMessage) {
             window.postMessage({ source: 'FlowKit-iOS', appId: '\(appId)' }, '*');
         }
         
-        // Esconder qualquer elemento de edição que possa estar visível
+        // Hide any editor elements that might be visible
         document.addEventListener('DOMContentLoaded', function() {
-            // Esconder elementos do editor se houver
+            // Hide editor elements if any
             const editorElements = document.querySelectorAll('.editor-only, .admin-only');
             editorElements.forEach(function(el) {
                 el.style.display = 'none';
