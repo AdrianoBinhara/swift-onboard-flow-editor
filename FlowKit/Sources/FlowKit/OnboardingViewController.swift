@@ -1,3 +1,4 @@
+
 import UIKit
 import WebKit
 
@@ -130,6 +131,15 @@ extension OnboardingViewController: WKNavigationDelegate {
         if (window.postMessage) {
             window.postMessage({ source: 'FlowKit-iOS', appId: '\(appId)' }, '*');
         }
+        
+        // Esconder qualquer elemento de edição que possa estar visível
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esconder elementos do editor se houver
+            const editorElements = document.querySelectorAll('.editor-only, .admin-only');
+            editorElements.forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
         """
         
         webView.evaluateJavaScript(script) { _, error in

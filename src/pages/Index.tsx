@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { SlideList } from "@/components/SlideList";
@@ -135,6 +134,25 @@ const Index = () => {
   const handleOpenSdkIntegration = () => {
     setSdkIntegrationOpen(true);
   };
+
+  // Check if we're in preview mode from the URL
+  const isPreviewMode = new URLSearchParams(window.location.search).has('preview');
+  const urlAppId = new URLSearchParams(window.location.search).get('appId');
+  const isSdk = new URLSearchParams(window.location.search).get('sdk') === 'ios';
+  
+  // If we're in preview mode, only show the phone preview
+  if (isPreviewMode) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
+        <PhonePreview 
+          slide={flow.slides[0]} 
+          allSlides={flow.slides} 
+          globalStyles={flow.globalStyles}
+          flowName={flow.name}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen">

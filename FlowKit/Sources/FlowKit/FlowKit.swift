@@ -1,3 +1,4 @@
+
 import SwiftUI
 import WebKit
 
@@ -70,7 +71,7 @@ public class FlowKit {
         }
         
         // Use a URL remota do serviço hospedado
-        // Acessando a rota principal do site, que carregará o React app
-        return URL(string: "\(baseUrl)/?appId=\(appId)&sdk=ios")
+        // Usamos /preview para garantir que apenas o onboarding seja exibido, não o editor
+        return URL(string: "\(baseUrl)/preview?appId=\(appId)&sdk=ios")
     }
 }
