@@ -1,3 +1,4 @@
+
 import SwiftUI
 import WebKit
 
@@ -12,13 +13,22 @@ public class FlowKit {
     /// The base URL for the onboarding flow service
     private let baseUrl = "https://flowkit-service.example.com"
     
+    /// Callback for handling network connectivity errors
+    public typealias ErrorHandler = (Error) -> Void
+    
+    /// Default error handler
+    private var errorHandler: ErrorHandler?
+    
     /// Private initializer to enforce singleton pattern
     private init() {}
     
-    /// Configure FlowKit with your app ID
-    /// - Parameter appId: The unique identifier for your onboarding flow
-    public static func configure(appId: String) {
+    /// Configure FlowKit with your app ID and optional error handler
+    /// - Parameters:
+    ///   - appId: The unique identifier for your onboarding flow
+    ///   - errorHandler: Optional handler for network connectivity errors
+    public static func configure(appId: String, errorHandler: ErrorHandler? = nil) {
         shared.appId = appId
+        shared.errorHandler = errorHandler
     }
     
     /// Show the onboarding flow programmatically
@@ -30,13 +40,22 @@ public class FlowKit {
         }
         
         let onboardingViewController = OnboardingViewController(appId: appId)
+        onboardingViewController.errorHandler = shared.errorHandler
         
         if let presenter = presentingViewController {
             onboardingViewController.modalPresentationStyle = .fullScreen
             presenter.present(onboardingViewController, animated: true)
-        } else if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
-            onboardingViewController.modalPresentationStyle = .fullScreen
-            rootViewController.present(onboardingViewController, animated: true)
+        } else {
+            // Use the key window's root view controller as a fallback
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootViewController = windowScene.windows.first?.rootViewController {
+                onboardingViewController.modalPresentationStyle = .fullScreen
+                rootViewController.present(onboardingViewController, animated: true)
+            } else if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
+                // Fallback for older iOS versions
+                onboardingViewController.modalPresentationStyle = .fullScreen
+                rootViewController.present(onboardingViewController, animated: true)
+            }
         }
     }
     

@@ -1,3 +1,4 @@
+
 import UIKit
 import WebKit
 
@@ -6,6 +7,9 @@ internal class OnboardingViewController: UIViewController {
     private let appId: String
     private var webView: WKWebView!
     private var loadingIndicator: UIActivityIndicatorView!
+    
+    /// Error handler callback
+    internal var errorHandler: FlowKit.ErrorHandler?
     
     /// Initialize with an app ID
     /// - Parameter appId: The unique identifier for the onboarding flow
@@ -33,6 +37,9 @@ internal class OnboardingViewController: UIViewController {
         contentController.add(self, name: "flowKitHandler")
         configuration.userContentController = contentController
         
+        // Set preference to allow cross-origin requests
+        configuration.preferences.setValue(true, forKey: "allowsAirPlayForMediaPlayback")
+        
         webView = WKWebView(frame: view.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
@@ -57,16 +64,31 @@ internal class OnboardingViewController: UIViewController {
         webView.load(request)
     }
     
-    private func showError(message: String) {
+    private func showError(message: String, error: Error? = nil) {
+        // Call error handler if available
+        if let error = error, let errorHandler = errorHandler {
+            errorHandler(error)
+        }
+        
+        let errorMessage = error != nil ? "\(message): \(error!.localizedDescription)" : message
+        
         let alert = UIAlertController(
             title: "Error",
-            message: message,
+            message: errorMessage,
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "OK",
+            title: "Retry",
             style: .default,
+            handler: { [weak self] _ in
+                self?.loadOnboardingFlow()
+            }
+        ))
+        
+        alert.addAction(UIAlertAction(
+            title: "Cancel",
+            style: .cancel,
             handler: { [weak self] _ in
                 self?.dismiss(animated: true)
             }
@@ -82,9 +104,32 @@ extension OnboardingViewController: WKNavigationDelegate {
         loadingIndicator.stopAnimating()
     }
     
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        loadingIndicator.stopAnimating()
+        
+        // Check for network connectivity errors
+        let nsError = error as NSError
+        if nsError.domain == NSURLErrorDomain {
+            let errorMessage: String
+            switch nsError.code {
+            case NSURLErrorNotConnectedToInternet:
+                errorMessage = "No internet connection"
+            case NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost:
+                errorMessage = "Cannot connect to server"
+            case NSURLErrorTimedOut:
+                errorMessage = "Connection timed out"
+            default:
+                errorMessage = "Failed to load onboarding"
+            }
+            showError(message: errorMessage, error: error)
+        } else {
+            showError(message: "Failed to load onboarding", error: error)
+        }
+    }
+    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         loadingIndicator.stopAnimating()
-        showError(message: "Failed to load onboarding: \(error.localizedDescription)")
+        showError(message: "Failed to load onboarding", error: error)
     }
 }
 

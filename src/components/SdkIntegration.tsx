@@ -51,60 +51,86 @@ import FlowKit
 @main
 struct ${appName.replace(/\s+/g, '')}App: App {
     init() {
+        // Configure FlowKit with your app ID
         FlowKit.configure(
-            appId: "${appId}"
+            appId: "${appId}",
+            errorHandler: { error in
+                // Optional: Handle network errors
+                print("FlowKit error: \\(error.localizedDescription)")
+            }
         )
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView().withOnboarding()
+            ContentView()
+                .withOnboarding(delay: 1.0) // Shows onboarding on app start with 1 second delay
         }
     }
 }
 
-// ContentView.swift
-import SwiftUI
-import FlowKit
-
+// Example ContentView with manual trigger option
 struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
                 Text("Welcome to ${appName}")
-                    .font(.title)
+                    .font(.largeTitle)
                     .padding()
                 
-                Button("Show Onboarding") {
+                // Optional: Button to manually show onboarding
+                Button("Show Onboarding Again") {
                     FlowKit.showOnboarding()
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
                 .padding()
             }
         }
-    }
-}
-
-extension View {
-    func withOnboarding() -> some View {
-        modifier(FlowKitViewModifier())
     }
 }`;
 
   // React Native code sample with new SDK name
   const reactNativeCode = `import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { FlowKitProvider } from 'react-flowkit';
+import { FlowKitProvider, useFlowKit } from 'react-flowkit';
 
-export default function App() {
+// Configure FlowKit with your app ID
+const App = () => {
   return (
-    <FlowKitProvider appId="${appId}">
+    <FlowKitProvider 
+      appId="${appId}"
+      onError={(error) => console.log('FlowKit error:', error)}
+    >
       <NavigationContainer>
-        {/* Your app content */}
+        <MainApp />
       </NavigationContainer>
     </FlowKitProvider>
   );
-}`;
+};
+
+// Example component that shows onboarding
+const MainApp = () => {
+  const { showOnboarding } = useFlowKit();
+  
+  // Automatically show onboarding when component mounts
+  React.useEffect(() => {
+    showOnboarding();
+  }, []);
+  
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 24, marginBottom: 20 }}>Welcome to ${appName}</Text>
+      
+      {/* Optional: Button to manually show onboarding */}
+      <Button 
+        title="Show Onboarding Again" 
+        onPress={() => showOnboarding()} 
+      />
+    </View>
+  );
+};
+
+export default App;`;
 
   // React Native installation instructions - simplified
   const reactNativeInstallation = `npm install react-flowkit
@@ -177,7 +203,7 @@ cd ios && pod install`;
                   App Implementation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap max-h-[400px] overflow-y-auto">
+                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
                     <code>{swiftCode}</code>
                   </pre>
                   <Button 
