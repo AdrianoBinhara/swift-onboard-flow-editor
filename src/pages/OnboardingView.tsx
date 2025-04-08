@@ -1,6 +1,6 @@
 
-import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PhonePreview } from "@/components/PhonePreview";
 import { OnboardingFlow, Slide, GlobalStyles } from "@/types/editor";
 import { toast } from "sonner";
@@ -39,6 +39,9 @@ const defaultFlow: OnboardingFlow = {
 const OnboardingView = () => {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const isSdk = urlParams.get('sdk') === 'ios';
 
   useEffect(() => {
     // Log information for debugging
@@ -57,12 +60,16 @@ const OnboardingView = () => {
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
-      <PhonePreview 
-        slide={defaultFlow.slides[0]} 
-        allSlides={defaultFlow.slides} 
-        globalStyles={defaultFlow.globalStyles}
-        flowName={defaultFlow.name}
-      />
+      <div className={isSdk ? "w-full h-full" : "w-auto h-auto"}>
+        <PhonePreview 
+          slide={defaultFlow.slides[0]} 
+          allSlides={defaultFlow.slides} 
+          globalStyles={defaultFlow.globalStyles}
+          flowName={defaultFlow.name}
+          hideControls={isSdk}
+          fullScreen={isSdk}
+        />
+      </div>
     </div>
   );
 };

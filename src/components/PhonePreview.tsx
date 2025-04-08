@@ -19,6 +19,8 @@ interface PhonePreviewProps {
   globalStyles?: GlobalStyles;
   flowName?: string;
   onOpenSdkIntegration?: () => void;
+  hideControls?: boolean;
+  fullScreen?: boolean;
 }
 
 export function PhonePreview({ 
@@ -26,7 +28,9 @@ export function PhonePreview({
   allSlides = [], 
   globalStyles, 
   flowName = "My App",
-  onOpenSdkIntegration 
+  onOpenSdkIntegration,
+  hideControls = false,
+  fullScreen = false
 }: PhonePreviewProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [slideId, setSlideId] = useState<string | null>(slide?.id || null);
@@ -105,9 +109,15 @@ export function PhonePreview({
     }
   };
 
+  // Apply different styling based on fullScreen prop
+  const phoneFrameClasses = cn(
+    fullScreen ? "w-full h-full border-0 rounded-none" : "w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px]",
+    "overflow-hidden relative flex flex-col"
+  );
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px] overflow-hidden relative flex flex-col">
+    <div className={cn("flex flex-col items-center", fullScreen ? "w-full h-full" : "")}>
+      <div className={phoneFrameClasses}>
         {/* Progress bar with enhanced props */}
         <ProgressBar 
           slide={{
@@ -139,29 +149,31 @@ export function PhonePreview({
         </div>
       </div>
       
-      {/* Controls below the phone frame */}
-      <div className="mt-4 flex items-center gap-2">
-        <ReplayButton 
-          onReplay={handleReplayAnimation} 
-          buttonColor={mergedSlide.buttonColor} 
-          buttonTextColor={mergedSlide.buttonTextColor}
-          roundedCorners={mergedSlide.roundedCorners !== false}
-        />
-        <Button 
-          size="sm"
-          variant="outline"
-          className={cn(
-            "flex items-center gap-2",
-            mergedSlide.roundedCorners === false ? "rounded-none" : "rounded-md"
-          )}
-          onClick={() => setPreviewDataOpen(true)}
-        >
-          <Code className="h-4 w-4" />
-          Preview Data
-        </Button>
-      </div>
+      {/* Controls below the phone frame - only shown when not in fullScreen/hideControls mode */}
+      {!hideControls && (
+        <div className="mt-4 flex items-center gap-2">
+          <ReplayButton 
+            onReplay={handleReplayAnimation} 
+            buttonColor={mergedSlide.buttonColor} 
+            buttonTextColor={mergedSlide.buttonTextColor}
+            roundedCorners={mergedSlide.roundedCorners !== false}
+          />
+          <Button 
+            size="sm"
+            variant="outline"
+            className={cn(
+              "flex items-center gap-2",
+              mergedSlide.roundedCorners === false ? "rounded-none" : "rounded-md"
+            )}
+            onClick={() => setPreviewDataOpen(true)}
+          >
+            <Code className="h-4 w-4" />
+            Preview Data
+          </Button>
+        </div>
+      )}
 
-      {/* Preview Data Dialog */}
+      {/* Preview Data Dialog - only shown when not in fullScreen/hideControls mode */}
       <PreviewData 
         open={previewDataOpen} 
         onOpenChange={setPreviewDataOpen} 
