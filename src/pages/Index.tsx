@@ -78,6 +78,12 @@ const Index = () => {
     console.log("Is frame mode:", isFrameOnlyMode);
     console.log("Is SDK mode:", isSdk);
     
+    if (urlAppId && isSdk) {
+      console.log("Redirecting to dedicated onboarding endpoint");
+      window.location.href = `/onboarding/${urlAppId}${location.search}`;
+      return;
+    }
+    
     if (urlAppId) {
       console.log("Setting app ID from URL:", urlAppId);
       setAppId(urlAppId);
@@ -86,7 +92,7 @@ const Index = () => {
       console.log("Setting generated app ID:", generatedId);
       setAppId(generatedId);
     }
-  }, [urlAppId, flow.name, location.pathname, urlParams]);
+  }, [urlAppId, flow.name, location.pathname, urlParams, isSdk]);
 
   useEffect(() => {
     const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {

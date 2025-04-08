@@ -16,8 +16,12 @@ const NotFound = () => {
   }, [location]);
 
   // Check if the URL looks like an app ID was attempted
-  const isLikelyAppIdAttempt = /^\/[a-z0-9-]+$/.test(location.pathname);
-  const possibleAppId = isLikelyAppIdAttempt ? location.pathname.substring(1) : null;
+  const isLikelyAppIdAttempt = /^\/(onboarding\/)?[a-z0-9-]+$/.test(location.pathname);
+  const possibleAppId = isLikelyAppIdAttempt 
+    ? location.pathname.startsWith('/onboarding/') 
+      ? location.pathname.substring('/onboarding/'.length) 
+      : location.pathname.substring(1)
+    : null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -43,6 +47,9 @@ const NotFound = () => {
             </ul>
             <p className="text-amber-800 text-sm mt-2">
               App IDs should look like: <code>my-onboarding-flow-y7opwx03</code>
+            </p>
+            <p className="text-amber-800 text-sm mt-2">
+              Try using the direct URL format: <code>/onboarding/your-app-id</code>
             </p>
           </div>
         )}

@@ -70,7 +70,7 @@ public class FlowKit {
             // return htmlURL
         }
         
-        // Use the direct URL format that works with the web app
-        return URL(string: "\(baseUrl)/\(appId)?sdk=ios")
+        // Use the dedicated onboarding endpoint for consistent rendering in the SDK
+        return URL(string: "\(baseUrl)/onboarding/\(appId)?sdk=ios")
     }
 }

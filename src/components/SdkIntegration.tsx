@@ -23,8 +23,8 @@ export function SdkIntegration({ open, onOpenChange, appId, appName }: SdkIntegr
   const [copied, setCopied] = useState(false);
   const [copiedSection, setCopiedSection] = useState("");
 
-  // Get direct URL for embedding - no /frame needed, just the app ID
-  const directUrl = `${window.location.origin}/${appId}`;
+  // Use the new dedicated onboarding endpoint for embedding
+  const directUrl = `${window.location.origin}/onboarding/${appId}`;
 
   const handleCopy = (text: string, section: string) => {
     navigator.clipboard.writeText(text);

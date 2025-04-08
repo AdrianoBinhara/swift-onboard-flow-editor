@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Index from "./pages/Index";
+import OnboardingView from "./pages/OnboardingView";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -19,8 +20,15 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Editor route */}
             <Route path="/" element={<Index />} />
+            
+            {/* Dedicated onboarding view route - for direct access to flows */}
+            <Route path="/onboarding/:appId" element={<OnboardingView />} />
+            
+            {/* Legacy app ID route - redirect handled in Index component */}
             <Route path="/:appId" element={<Index />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
