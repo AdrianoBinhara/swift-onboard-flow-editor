@@ -1,4 +1,3 @@
-
 import UIKit
 import WebKit
 
@@ -37,13 +36,31 @@ internal class OnboardingViewController: UIViewController {
         contentController.add(self, name: "flowKitHandler")
         configuration.userContentController = contentController
         
-        // Set preference to allow cross-origin requests
-        configuration.preferences.setValue(true, forKey: "allowsAirPlayForMediaPlayback")
+        // Configurações adicionais para melhorar a experiência
+        configuration.allowsInlineMediaPlayback = true
+        configuration.mediaTypesRequiringUserActionForPlayback = []
         
         webView = WKWebView(frame: view.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
+        
+        // Adicionar botão de fechar
+        let closeButton = UIButton(type: .system)
+        closeButton.setTitle("Fechar", for: .normal)
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(webView)
+        view.addSubview(closeButton)
+        
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+        ])
+    }
+    
+    @objc private func closeButtonTapped() {
+        dismiss(animated: true)
     }
     
     private func setupLoadingIndicator() {
@@ -73,13 +90,13 @@ internal class OnboardingViewController: UIViewController {
         let errorMessage = error != nil ? "\(message): \(error!.localizedDescription)" : message
         
         let alert = UIAlertController(
-            title: "Error",
+            title: "Erro",
             message: errorMessage,
             preferredStyle: .alert
         )
         
         alert.addAction(UIAlertAction(
-            title: "Retry",
+            title: "Tentar novamente",
             style: .default,
             handler: { [weak self] _ in
                 self?.loadOnboardingFlow()
@@ -87,7 +104,7 @@ internal class OnboardingViewController: UIViewController {
         ))
         
         alert.addAction(UIAlertAction(
-            title: "Cancel",
+            title: "Cancelar",
             style: .cancel,
             handler: { [weak self] _ in
                 self?.dismiss(animated: true)
@@ -102,6 +119,24 @@ internal class OnboardingViewController: UIViewController {
 extension OnboardingViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         loadingIndicator.stopAnimating()
+        
+        // Injetar script para comunicação entre o WebView e o app nativo
+        let script = """
+        window.addEventListener('message', function(event) {
+            window.webkit.messageHandlers.flowKitHandler.postMessage(event.data);
+        });
+        
+        // Informar ao site que está rodando dentro do SDK iOS
+        if (window.postMessage) {
+            window.postMessage({ source: 'FlowKit-iOS', appId: '\(appId)' }, '*');
+        }
+        """
+        
+        webView.evaluateJavaScript(script) { _, error in
+            if let error = error {
+                print("Error injecting script: \(error.localizedDescription)")
+            }
+        }
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -113,23 +148,23 @@ extension OnboardingViewController: WKNavigationDelegate {
             let errorMessage: String
             switch nsError.code {
             case NSURLErrorNotConnectedToInternet:
-                errorMessage = "No internet connection"
+                errorMessage = "Sem conexão com a internet"
             case NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost:
-                errorMessage = "Cannot connect to server"
+                errorMessage = "Não foi possível conectar ao servidor"
             case NSURLErrorTimedOut:
-                errorMessage = "Connection timed out"
+                errorMessage = "Tempo de conexão esgotado"
             default:
-                errorMessage = "Failed to load onboarding"
+                errorMessage = "Falha ao carregar o onboarding"
             }
             showError(message: errorMessage, error: error)
         } else {
-            showError(message: "Failed to load onboarding", error: error)
+            showError(message: "Falha ao carregar o onboarding", error: error)
         }
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         loadingIndicator.stopAnimating()
-        showError(message: "Failed to load onboarding", error: error)
+        showError(message: "Falha ao carregar o onboarding", error: error)
     }
 }
 

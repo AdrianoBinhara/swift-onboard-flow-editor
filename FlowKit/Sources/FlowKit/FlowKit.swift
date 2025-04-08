@@ -1,4 +1,3 @@
-
 import SwiftUI
 import WebKit
 
@@ -11,7 +10,7 @@ public class FlowKit {
     private var appId: String?
     
     /// The base URL for the onboarding flow service
-    private let baseUrl = "https://flowkit-service.example.com"
+    private let baseUrl = "https://swift-onboard-flow-editor.lovable.app"
     
     /// Callback for handling network connectivity errors
     public typealias ErrorHandler = (Error) -> Void
@@ -63,6 +62,15 @@ public class FlowKit {
     /// - Returns: URL for the onboarding flow
     internal func getOnboardingUrl() -> URL? {
         guard let appId = appId else { return nil }
-        return URL(string: "\(baseUrl)/flow/\(appId)")
+        
+        // Primeiro tenta usar o arquivo HTML local para desenvolvimento
+        if let htmlURL = Bundle.module.url(forResource: "onboarding", withExtension: "html", subdirectory: "Web") {
+            // Para desenvolvimento local, descomente esta linha
+            // return htmlURL
+        }
+        
+        // Use a URL remota do serviço hospedado
+        // Acessando a rota principal do site, que carregará o React app
+        return URL(string: "\(baseUrl)/?appId=\(appId)&sdk=ios")
     }
 }
