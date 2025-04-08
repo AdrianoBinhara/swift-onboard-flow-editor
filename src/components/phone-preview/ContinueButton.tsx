@@ -8,9 +8,10 @@ import { Slide } from "@/types/editor";
 interface ContinueButtonProps {
   slide: Slide;
   onContinue?: () => void;
+  isLastSlide?: boolean;
 }
 
-export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
+export function ContinueButton({ slide, onContinue, isLastSlide = false }: ContinueButtonProps) {
   const getButtonSize = () => {
     switch (slide.buttonSize) {
       case 'small': return 'h-8 px-3 text-xs';
@@ -41,6 +42,9 @@ export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
         return <ArrowRight className="ml-2 h-4 w-4" />;
     }
   };
+
+  // Change button text based on whether it's the last slide
+  const buttonText = isLastSlide ? "Finish" : "Continue";
   
   return (
     <div className={getButtonContainerClass()}>
@@ -57,7 +61,7 @@ export function ContinueButton({ slide, onContinue }: ContinueButtonProps) {
         }}
         onClick={onContinue}
       >
-        Continue
+        {buttonText}
         {getButtonIcon()}
       </Button>
     </div>

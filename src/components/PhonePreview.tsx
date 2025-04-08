@@ -12,6 +12,7 @@ import { PreviewData } from "./phone-preview/PreviewData";
 import { SdkIntegration } from "./SdkIntegration";
 import { Code } from "lucide-react";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 interface PhonePreviewProps {
   slide: Slide | null;
@@ -53,6 +54,9 @@ export function PhonePreview({
   const progressPercentage = allSlides.length > 0 
     ? Math.round(((currentIndex + 1) / allSlides.length) * 100) 
     : 0;
+  
+  // Check if this is the last slide
+  const isLastSlide = currentIndex === allSlides.length - 1;
 
   // Update current slide index when slide changes
   useEffect(() => {
@@ -98,6 +102,19 @@ export function PhonePreview({
   };
 
   const navigateToNextSlide = () => {
+    if (isLastSlide) {
+      // Handle completion of onboarding flow
+      if (fullScreen) {
+        // In SDK mode, signal completion to the native app
+        window.webkit?.messageHandlers?.flowKitHandler?.postMessage({
+          action: 'complete'
+        });
+      } else {
+        toast.success("Onboarding completed!");
+      }
+      return;
+    }
+    
     const nextSlide = allSlides[currentIndex + 1];
     if (nextSlide) {
       setIsAnimating(false);
@@ -145,7 +162,11 @@ export function PhonePreview({
           </div>
           
           {/* Button at the specified position with navigation functionality */}
-          <ContinueButton slide={mergedSlide} onContinue={navigateToNextSlide} />
+          <ContinueButton 
+            slide={mergedSlide} 
+            onContinue={navigateToNextSlide}
+            isLastSlide={isLastSlide}
+          />
         </div>
       </div>
       
