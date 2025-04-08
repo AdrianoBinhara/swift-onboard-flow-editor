@@ -151,7 +151,7 @@ const Index = () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const isPreviewMode = urlParams.has('preview');
-  const isFrameOnlyMode = urlParams.has('frame');
+  const isFrameOnlyMode = urlParams.has('frame') || window.location.pathname === '/frame';
   const urlAppId = urlParams.get('appId');
   const isSdk = urlParams.get('sdk') === 'ios';
   

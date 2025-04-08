@@ -71,7 +71,7 @@ public class FlowKit {
         }
         
         // Use remote URL from hosted service
-        // We use /frame to ensure that only the onboarding frame is displayed, not the editor
+        // Make sure to use /frame route which is configured to display only the onboarding flow
         return URL(string: "\(baseUrl)/frame?appId=\(appId)&sdk=ios")
     }
 }
