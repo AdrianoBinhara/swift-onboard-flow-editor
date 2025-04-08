@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Slide, GlobalStyles } from "@/types/editor";
 import { cn } from "@/lib/utils";
@@ -38,34 +37,27 @@ export function PhonePreview({
   const [previewDataOpen, setPreviewDataOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-  // Generate a stable app ID based on the flow name
   const appId = `${flowName.toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 10)}`;
 
-  // If no slide is selected, show empty preview
   if (!slide) {
     return <EmptyPreview />;
   }
 
-  // Merge global styles with slide-specific styles for background and progress bar
   const mergedSlide = globalStyles ? { ...globalStyles, ...slide } : slide;
 
-  // Find the current slide index
   const currentIndex = allSlides.findIndex(s => s.id === slide.id);
   const progressPercentage = allSlides.length > 0 
     ? Math.round(((currentIndex + 1) / allSlides.length) * 100) 
     : 0;
   
-  // Check if this is the last slide
   const isLastSlide = currentIndex === allSlides.length - 1;
 
-  // Update current slide index when slide changes
   useEffect(() => {
     if (currentIndex >= 0) {
       setCurrentSlideIndex(currentIndex);
     }
   }, [currentIndex]);
 
-  // Reset animation when slide changes
   useEffect(() => {
     if (slide.id !== slideId) {
       setSlideId(slide.id);
@@ -79,7 +71,6 @@ export function PhonePreview({
     setTimeout(() => setIsAnimating(true), 10);
   };
 
-  // Set a slight delay for animation
   useEffect(() => {
     if (!isAnimating) {
       const timer = setTimeout(() => {
@@ -93,7 +84,6 @@ export function PhonePreview({
     const prevSlide = allSlides[currentIndex - 1];
     if (prevSlide) {
       setIsAnimating(false);
-      // Update the slide ID - This will trigger the parent component to update the selected slide
       const event = new CustomEvent('slide-change', { 
         detail: { slideId: prevSlide.id } 
       });
@@ -103,12 +93,12 @@ export function PhonePreview({
 
   const navigateToNextSlide = () => {
     if (isLastSlide) {
-      // Handle completion of onboarding flow
       if (fullScreen) {
-        // In SDK mode, signal completion to the native app
-        window.webkit?.messageHandlers?.flowKitHandler?.postMessage({
-          action: 'complete'
-        });
+        if (window.webkit?.messageHandlers?.flowKitHandler) {
+          window.webkit.messageHandlers.flowKitHandler.postMessage({
+            action: 'complete'
+          });
+        }
       } else {
         toast.success("Onboarding completed!");
       }
@@ -118,7 +108,6 @@ export function PhonePreview({
     const nextSlide = allSlides[currentIndex + 1];
     if (nextSlide) {
       setIsAnimating(false);
-      // Update the slide ID - This will trigger the parent component to update the selected slide
       const event = new CustomEvent('slide-change', { 
         detail: { slideId: nextSlide.id } 
       });
@@ -126,7 +115,6 @@ export function PhonePreview({
     }
   };
 
-  // Apply different styling based on fullScreen prop
   const phoneFrameClasses = cn(
     fullScreen ? "w-full h-full border-0 rounded-none" : "w-[375px] h-[667px] border-8 border-gray-800 rounded-[40px]",
     "overflow-hidden relative flex flex-col"
@@ -135,7 +123,6 @@ export function PhonePreview({
   return (
     <div className={cn("flex flex-col items-center", fullScreen ? "w-full h-full" : "")}>
       <div className={phoneFrameClasses}>
-        {/* Progress bar with enhanced props */}
         <ProgressBar 
           slide={{
             ...mergedSlide,
@@ -153,7 +140,6 @@ export function PhonePreview({
           className="flex flex-1 flex-col px-6 relative overflow-auto"
           style={getBackgroundStyle(mergedSlide)}
         >
-          {/* Content area with vertical and horizontal alignment */}
           <div className={cn(
             "flex flex-1 w-full justify-center", 
             getVerticalAlignment(mergedSlide.verticalAlignment)
@@ -161,7 +147,6 @@ export function PhonePreview({
             <SlideContent slide={slide} isAnimating={isAnimating} globalStyles={globalStyles} />
           </div>
           
-          {/* Button at the specified position with navigation functionality */}
           <ContinueButton 
             slide={mergedSlide} 
             onContinue={navigateToNextSlide}
@@ -170,7 +155,6 @@ export function PhonePreview({
         </div>
       </div>
       
-      {/* Controls below the phone frame - only shown when not in fullScreen/hideControls mode */}
       {!hideControls && (
         <div className="mt-4 flex items-center gap-2">
           <ReplayButton 
@@ -194,7 +178,6 @@ export function PhonePreview({
         </div>
       )}
 
-      {/* Preview Data Dialog - only shown when not in fullScreen/hideControls mode */}
       <PreviewData 
         open={previewDataOpen} 
         onOpenChange={setPreviewDataOpen} 
