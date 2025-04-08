@@ -64,14 +64,14 @@ public class FlowKit {
     internal func getOnboardingUrl() -> URL? {
         guard let appId = appId else { return nil }
         
-        // Primeiro tenta usar o arquivo HTML local para desenvolvimento
+        // First try to use local HTML file for development
         if let htmlURL = Bundle.module.url(forResource: "onboarding", withExtension: "html", subdirectory: "Web") {
-            // Para desenvolvimento local, descomente esta linha
+            // For local development, uncomment this line
             // return htmlURL
         }
         
-        // Use a URL remota do serviço hospedado
-        // Usamos /preview para garantir que apenas o onboarding seja exibido, não o editor
-        return URL(string: "\(baseUrl)/preview?appId=\(appId)&sdk=ios")
+        // Use remote URL from hosted service
+        // We use /frame to ensure that only the onboarding frame is displayed, not the editor
+        return URL(string: "\(baseUrl)/frame?appId=\(appId)&sdk=ios")
     }
 }

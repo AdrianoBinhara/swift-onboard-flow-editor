@@ -1,4 +1,6 @@
 
+// Only updating the relevant parts of the SdkIntegration component
+
 import React, { useState } from "react";
 import { 
   Dialog, 
@@ -23,6 +25,9 @@ interface SdkIntegrationProps {
 export function SdkIntegration({ open, onOpenChange, appId, appName }: SdkIntegrationProps) {
   const [copied, setCopied] = useState(false);
   const [copiedSection, setCopiedSection] = useState("");
+
+  // Get frame URL for embedding
+  const frameUrl = `${window.location.origin}/frame?appId=${appId}`;
 
   const handleCopy = (text: string, section: string) => {
     navigator.clipboard.writeText(text);
@@ -140,7 +145,7 @@ cd ios && pod install`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-[500px] max-h-[85vh] overflow-y-auto">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-xl">Integrate with FlowKit</DialogTitle>
           <DialogDescription className="text-sm">
@@ -164,6 +169,24 @@ cd ios && pod install`;
                 <span className="sr-only">Copy</span>
               </Button>
             </div>
+          </div>
+          
+          {/* Frame URL Section */}
+          <div className="bg-muted/30 p-3 rounded-lg border">
+            <h3 className="text-sm font-medium mb-1">Onboarding Frame URL</h3>
+            <div className="flex space-x-2">
+              <code className="flex-1 bg-muted p-2 rounded-md text-sm overflow-hidden font-mono text-xs">{frameUrl}</code>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => handleCopy(frameUrl, "frameUrl")}
+                className="shrink-0"
+              >
+                {copied && copiedSection === "frameUrl" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                <span className="sr-only">Copy</span>
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Use this URL to display only the onboarding flow in a WebView.</p>
           </div>
 
           {/* Integration Code Tabs */}

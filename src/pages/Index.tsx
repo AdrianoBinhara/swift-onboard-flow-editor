@@ -6,7 +6,6 @@ import { GlobalStylesEditor } from "@/components/GlobalStylesEditor";
 import { PhonePreview } from "@/components/PhonePreview";
 import { OnboardingFlow, Slide, GlobalStyles } from "@/types/editor";
 import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, Layers } from "lucide-react";
 import { SdkIntegration } from "@/components/SdkIntegration";
@@ -41,16 +40,31 @@ const defaultFlow: OnboardingFlow = {
   globalStyles: defaultGlobalStyles,
 };
 
+const generateStableAppId = (flowName: string): string => {
+  const storageKey = 'flowkit-app-id';
+  const storedAppId = localStorage.getItem(storageKey);
+  
+  if (storedAppId) {
+    return storedAppId;
+  }
+  
+  const newAppId = `${flowName.toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 10)}`;
+  localStorage.setItem(storageKey, newAppId);
+  return newAppId;
+};
+
 const Index = () => {
   const [flow, setFlow] = useState<OnboardingFlow>(defaultFlow);
   const [selectedSlideId, setSelectedSlideId] = useState<string | null>(flow.slides[0]?.id || null);
   const [editorTab, setEditorTab] = useState<"slide" | "global">("slide");
   const [sdkIntegrationOpen, setSdkIntegrationOpen] = useState(false);
+  const [appId, setAppId] = useState<string>('');
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
 
-  // Generate a stable app ID based on the flow name
-  const appId = `${flow.name.toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 10)}`;
+  useEffect(() => {
+    setAppId(generateStableAppId(flow.name));
+  }, []);
 
   useEffect(() => {
     const handleSlideChange = (event: CustomEvent<{ slideId: string }>) => {
@@ -135,13 +149,13 @@ const Index = () => {
     setSdkIntegrationOpen(true);
   };
 
-  // Check if we're in preview mode from the URL
-  const isPreviewMode = new URLSearchParams(window.location.search).has('preview');
-  const urlAppId = new URLSearchParams(window.location.search).get('appId');
-  const isSdk = new URLSearchParams(window.location.search).get('sdk') === 'ios';
+  const urlParams = new URLSearchParams(window.location.search);
+  const isPreviewMode = urlParams.has('preview');
+  const isFrameOnlyMode = urlParams.has('frame');
+  const urlAppId = urlParams.get('appId');
+  const isSdk = urlParams.get('sdk') === 'ios';
   
-  // If we're in preview mode, only show the phone preview
-  if (isPreviewMode) {
+  if (isFrameOnlyMode || isPreviewMode) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
         <PhonePreview 
@@ -159,7 +173,14 @@ const Index = () => {
       <Header 
         flowName={flow.name} 
         onFlowNameChange={handleFlowNameChange} 
-        onPublish={handleOpenSdkIntegration}
+        onPublish={handleOpenSdkIntegration} 
+        onCodeClick={() => {
+          const frameUrl = `${window.location.origin}/frame?appId=${appId}`;
+          navigator.clipboard.writeText(frameUrl);
+          toast.success("Frame URL copied to clipboard", {
+            description: "Use this URL in your app to show only the onboarding flow."
+          });
+        }}
       />
       <div className="flex-1 flex overflow-hidden">
         <div className="w-2/5 flex flex-col border-r border-border">
@@ -211,7 +232,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* SDK Integration Dialog */}
       <SdkIntegration
         open={sdkIntegrationOpen}
         onOpenChange={setSdkIntegrationOpen}
