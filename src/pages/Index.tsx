@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -62,26 +61,22 @@ const Index = () => {
   const [sdkIntegrationOpen, setSdkIntegrationOpen] = useState(false);
   const [appId, setAppId] = useState<string>('');
   
-  const { appId: urlAppId } = useParams();
+  const { appId: urlAppId } = useParams<{ appId?: string }>();
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   
-  // Parse URL parameters to determine the mode
-  const isFrameParam = urlParams.has('frame');
   const isSdk = urlParams.get('sdk') === 'ios';
-  
-  // Calculate display mode based on URL and parameters
-  const isFrameOnlyMode = urlAppId !== undefined || location.pathname === '/frame' || isFrameParam;
+  const isFrameOnlyMode = !!urlAppId || urlParams.has('frame');
   const isPreviewMode = urlParams.has('preview');
 
   const selectedSlide = flow.slides.find((slide) => slide.id === selectedSlideId) || null;
 
   useEffect(() => {
-    // Log the current path and parameters to debug routing issues
     console.log("Current path:", location.pathname);
     console.log("URL parameters:", Object.fromEntries(urlParams.entries()));
     console.log("URL appId:", urlAppId);
     console.log("Is frame mode:", isFrameOnlyMode);
+    console.log("Is SDK mode:", isSdk);
     
     if (urlAppId) {
       console.log("Setting app ID from URL:", urlAppId);
@@ -175,7 +170,7 @@ const Index = () => {
   const handleOpenSdkIntegration = () => {
     setSdkIntegrationOpen(true);
   };
-  
+
   if (isFrameOnlyMode || isPreviewMode) {
     console.log("Rendering frame-only or preview mode");
     return (

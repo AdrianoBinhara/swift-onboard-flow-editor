@@ -79,7 +79,7 @@ internal class OnboardingViewController: UIViewController {
         }
         
         print("FlowKit: Loading onboarding from URL: \(url.absoluteString)")
-        let request = URLRequest(url: url)
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         webView.load(request)
     }
     

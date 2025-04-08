@@ -23,7 +23,7 @@ export function SdkIntegration({ open, onOpenChange, appId, appName }: SdkIntegr
   const [copied, setCopied] = useState(false);
   const [copiedSection, setCopiedSection] = useState("");
 
-  // Get direct URL for embedding
+  // Get direct URL for embedding - no /frame needed, just the app ID
   const directUrl = `${window.location.origin}/${appId}`;
 
   const handleCopy = (text: string, section: string) => {

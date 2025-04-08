@@ -70,7 +70,7 @@ public class FlowKit {
             // return htmlURL
         }
         
-        // Use direct app ID in the path for simplicity and consistent routing
+        // Use the direct URL format that works with the web app
         return URL(string: "\(baseUrl)/\(appId)?sdk=ios")
     }
 }

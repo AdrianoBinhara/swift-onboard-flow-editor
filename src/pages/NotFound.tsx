@@ -17,6 +17,7 @@ const NotFound = () => {
 
   // Check if the URL looks like an app ID was attempted
   const isLikelyAppIdAttempt = /^\/[a-z0-9-]+$/.test(location.pathname);
+  const possibleAppId = isLikelyAppIdAttempt ? location.pathname.substring(1) : null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -30,7 +31,9 @@ const NotFound = () => {
         {isLikelyAppIdAttempt && (
           <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-6">
             <p className="text-amber-800 text-sm">
-              It looks like you're trying to access an onboarding flow with an app ID. 
+              It looks like you're trying to access an onboarding flow with app ID: <b>{possibleAppId}</b>
+            </p>
+            <p className="text-amber-800 text-sm mt-2">
               Please make sure that:
             </p>
             <ul className="text-amber-700 text-sm list-disc list-inside mt-2">
