@@ -140,20 +140,20 @@ cd ios && pod install`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px]">
-        <DialogHeader className="mb-4">
-          <DialogTitle className="text-2xl">Integrate with FlowKit</DialogTitle>
-          <DialogDescription className="text-base">
+      <DialogContent className="max-w-[600px] max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="mb-2">
+          <DialogTitle className="text-xl">Integrate with FlowKit</DialogTitle>
+          <DialogDescription className="text-sm">
             Add your onboarding flow to your mobile app with just a few lines of code.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* App ID Section */}
-          <div className="bg-muted/30 p-4 rounded-lg border">
-            <h3 className="text-sm font-medium mb-2">App ID</h3>
+          <div className="bg-muted/30 p-3 rounded-lg border">
+            <h3 className="text-sm font-medium mb-1">App ID</h3>
             <div className="flex space-x-2">
-              <code className="flex-1 bg-muted p-3 rounded-md text-sm overflow-hidden font-mono">{appId}</code>
+              <code className="flex-1 bg-muted p-2 rounded-md text-sm overflow-hidden font-mono">{appId}</code>
               <Button 
                 size="sm" 
                 variant="outline" 
@@ -168,26 +168,26 @@ cd ios && pod install`;
 
           {/* Integration Code Tabs */}
           <Tabs defaultValue="swift" className="w-full">
-            <TabsList className="grid grid-cols-2 w-full mb-4">
-              <TabsTrigger value="swift" className="py-2">Swift</TabsTrigger>
-              <TabsTrigger value="react-native" className="py-2">React Native</TabsTrigger>
+            <TabsList className="grid grid-cols-2 w-full mb-2">
+              <TabsTrigger value="swift" className="py-1.5">Swift</TabsTrigger>
+              <TabsTrigger value="react-native" className="py-1.5">React Native</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="swift" className="space-y-4 mt-0">
+            <TabsContent value="swift" className="space-y-3 mt-0">
               {/* Swift Package Manager Installation */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center mb-2">
-                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">1</span>
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium flex items-center mb-1">
+                  <span className="inline-flex justify-center items-center w-5 h-5 rounded-full bg-primary text-primary-foreground mr-2 text-xs">1</span>
                   Installation with Swift Package Manager
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                  <pre className="bg-black text-white p-2 rounded-md text-xs font-mono whitespace-pre-wrap">
                     <code>{swiftPackageSetup}</code>
                   </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
+                    className="absolute top-1.5 right-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-6"
                     onClick={() => handleCopy(swiftPackageSetup, "swiftPackageSetup")}
                   >
                     {copied && copiedSection === "swiftPackageSetup" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
@@ -197,19 +197,19 @@ cd ios && pod install`;
               </div>
 
               {/* Swift App Implementation */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center mb-2">
-                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">2</span>
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium flex items-center mb-1">
+                  <span className="inline-flex justify-center items-center w-5 h-5 rounded-full bg-primary text-primary-foreground mr-2 text-xs">2</span>
                   App Implementation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                  <pre className="bg-black text-white p-2 rounded-md text-xs font-mono whitespace-pre-wrap max-h-[270px] overflow-y-auto">
                     <code>{swiftCode}</code>
                   </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
+                    className="absolute top-1.5 right-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-6"
                     onClick={() => handleCopy(swiftCode, "swiftCode")}
                   >
                     {copied && copiedSection === "swiftCode" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
@@ -219,21 +219,21 @@ cd ios && pod install`;
               </div>
             </TabsContent>
             
-            <TabsContent value="react-native" className="space-y-4 mt-0">
+            <TabsContent value="react-native" className="space-y-3 mt-0">
               {/* React Native Installation Instructions */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center mb-2">
-                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">1</span>
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium flex items-center mb-1">
+                  <span className="inline-flex justify-center items-center w-5 h-5 rounded-full bg-primary text-primary-foreground mr-2 text-xs">1</span>
                   Installation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                  <pre className="bg-black text-white p-2 rounded-md text-xs font-mono whitespace-pre-wrap">
                     <code>{reactNativeInstallation}</code>
                   </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
+                    className="absolute top-1.5 right-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-6"
                     onClick={() => handleCopy(reactNativeInstallation, "reactNativeInstallation")}
                   >
                     {copied && copiedSection === "reactNativeInstallation" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
@@ -243,19 +243,19 @@ cd ios && pod install`;
               </div>
 
               {/* React Native Usage Code */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center mb-2">
-                  <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-primary text-primary-foreground mr-2 text-sm">2</span>
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium flex items-center mb-1">
+                  <span className="inline-flex justify-center items-center w-5 h-5 rounded-full bg-primary text-primary-foreground mr-2 text-xs">2</span>
                   Implementation
                 </h4>
                 <div className="relative">
-                  <pre className="bg-black text-white p-3 rounded-md text-sm font-mono whitespace-pre-wrap">
+                  <pre className="bg-black text-white p-2 rounded-md text-xs font-mono whitespace-pre-wrap max-h-[270px] overflow-y-auto">
                     <code>{reactNativeCode}</code>
                   </pre>
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="absolute top-2 right-2 bg-primary text-primary-foreground hover:bg-primary/90 h-7"
+                    className="absolute top-1.5 right-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-6"
                     onClick={() => handleCopy(reactNativeCode, "reactNativeCode")}
                   >
                     {copied && copiedSection === "reactNativeCode" ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
@@ -267,9 +267,10 @@ cd ios && pod install`;
           </Tabs>
         </div>
 
-        <DialogFooter className="flex items-center justify-between mt-4 pt-4 border-t">
+        <DialogFooter className="flex items-center justify-between mt-3 pt-2 border-t">
           <Button
             variant="outline"
+            size="sm"
             onClick={() => onOpenChange(false)}
           >
             Close
@@ -277,10 +278,11 @@ cd ios && pod install`;
           
           <Button 
             variant="default"
-            className="flex items-center gap-2"
+            size="sm"
+            className="flex items-center gap-1"
             onClick={() => toast.success("Documentation opened in new tab")}
           >
-            <ExternalLink className="h-4 w-4" />
+            <ExternalLink className="h-3.5 w-3.5" />
             Documentation
           </Button>
         </DialogFooter>

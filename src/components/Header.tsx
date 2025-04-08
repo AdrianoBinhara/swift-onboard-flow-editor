@@ -8,9 +8,10 @@ interface HeaderProps {
   flowName: string;
   onFlowNameChange: (name: string) => void;
   onPublish: () => void;
+  onCodeClick?: () => void;
 }
 
-export function Header({ flowName, onFlowNameChange, onPublish }: HeaderProps) {
+export function Header({ flowName, onFlowNameChange, onPublish, onCodeClick }: HeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [nameValue, setNameValue] = useState(flowName);
 
@@ -59,7 +60,7 @@ export function Header({ flowName, onFlowNameChange, onPublish }: HeaderProps) {
         <Button variant="ghost" size="icon">
           <Settings className="h-5 w-5" />
         </Button>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={onCodeClick}>
           <Code className="h-5 w-5" />
         </Button>
         <Button className="ml-2" onClick={onPublish}>

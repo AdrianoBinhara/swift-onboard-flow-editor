@@ -105,16 +105,16 @@ export function PreviewData({ open, onOpenChange, slides }: PreviewDataProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="max-w-md max-h-[85vh]">
         <DialogHeader>
           <DialogTitle>Preview Data</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* SDK Payload */}
           <div>
             <h3 className="text-sm font-medium mb-2">SDK Payload (sent to app):</h3>
-            <pre className="bg-muted p-4 rounded-md overflow-auto text-xs">
+            <pre className="bg-muted p-3 rounded-md text-xs max-h-[150px] overflow-y-auto">
               <code>{JSON.stringify(sdkPayload, null, 2)}</code>
             </pre>
           </div>
@@ -123,38 +123,38 @@ export function PreviewData({ open, onOpenChange, slides }: PreviewDataProps) {
           <div>
             <h3 className="text-sm font-medium mb-2">User Responses:</h3>
             {userResponses.some(r => r.answer) ? (
-              <div className="space-y-4">
+              <div className="space-y-3 max-h-[250px] overflow-y-auto pr-1">
                 {userResponses.filter(r => r.answer).map((response, index) => (
-                  <div key={index} className="border rounded-md p-3">
+                  <div key={index} className="border rounded-md p-2">
                     {response.slideType === "input" && (
                       <>
-                        <p className="text-sm"><span className="font-medium">Input:</span> {response.question}</p>
-                        <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
-                        <p className="text-sm mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
+                        <p className="text-xs"><span className="font-medium">Input:</span> {response.question}</p>
+                        <p className="text-xs"><span className="text-muted-foreground text-[10px]">SDK Key: {response.sdkKey}</span></p>
+                        <p className="text-xs mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
                       </>
                     )}
                     
                     {response.slideType === "choice" && (
                       <>
-                        <p className="text-sm"><span className="font-medium">Choice:</span> {response.question}</p>
-                        <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
-                        <p className="text-sm mt-1"><span className="font-medium">Choice:</span> {response.answer}</p>
+                        <p className="text-xs"><span className="font-medium">Choice:</span> {response.question}</p>
+                        <p className="text-xs"><span className="text-muted-foreground text-[10px]">SDK Key: {response.sdkKey}</span></p>
+                        <p className="text-xs mt-1"><span className="font-medium">Choice:</span> {response.answer}</p>
                       </>
                     )}
                     
                     {response.slideType === "date" && (
                       <>
-                        <p className="text-sm"><span className="font-medium">Date:</span> {response.question}</p>
-                        <p className="text-sm"><span className="text-muted-foreground text-xs">SDK Key: {response.sdkKey}</span></p>
-                        <p className="text-sm mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
+                        <p className="text-xs"><span className="font-medium">Date:</span> {response.question}</p>
+                        <p className="text-xs"><span className="text-muted-foreground text-[10px]">SDK Key: {response.sdkKey}</span></p>
+                        <p className="text-xs mt-1"><span className="font-medium">Response:</span> {response.answer}</p>
                       </>
                     )}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center p-6 text-center border border-dashed rounded-md">
-                <p className="text-muted-foreground">No responses yet</p>
+              <div className="flex flex-col items-center justify-center p-4 text-center border border-dashed rounded-md">
+                <p className="text-muted-foreground text-sm">No responses yet</p>
                 <p className="text-xs text-muted-foreground mt-1">Responses will appear here as users interact with the slides</p>
               </div>
             )}
